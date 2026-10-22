@@ -804,36 +804,6 @@ h1, h2, h3, h4, p, figure, blockquote { margin: 0; }
   text-wrap: pretty;
 }
 .manifesto__text .w { transition: opacity 0.45s ease, color 0.6s ease; }
-.manifesto__aside {
-  display: grid;
-  gap: 1.2rem;
-  align-content: end;
-  margin-top: clamp(1.6rem, 3vw, 2.4rem);
-}
-@media (min-width: 1000px) {
-  .manifesto__inner { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: clamp(2rem, 5vw, 5rem); align-items: end; }
-  .manifesto__aside { margin-top: 0; }
-}
-.manifesto__aside p { color: var(--muted); font-size: 0.95rem; max-width: 38ch; }
-.manifesto__tick {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-family: var(--mono);
-  font-size: 0.64rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted-dim);
-}
-.manifesto__tick b { color: var(--lime); font-weight: 500; font-variant-numeric: tabular-nums; }
-.manifesto__track { height: 1px; background: var(--line-soft); position: relative; overflow: hidden; }
-.manifesto__track i {
-  position: absolute;
-  inset: 0;
-  background: var(--lime);
-  transform: scaleX(var(--p, 0));
-  transform-origin: left;
-}
 
 /* ==========================================================================
    MARQUEE

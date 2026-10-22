@@ -225,9 +225,6 @@
   /* ------------------------------------------------------------------ */
   const manifestoEl = document.querySelector("[data-manifesto]");
   const manifestoSection = document.querySelector(".manifesto");
-  const manifestoTrack = document.querySelector("[data-manifesto-track]");
-  const manifestoCount = document.querySelector("[data-manifesto-count]");
-  const manifestoTotal = document.querySelector("[data-manifesto-total]");
   let words = [];
 
   if (manifestoEl) {
@@ -244,12 +241,9 @@
       if (i === 3 || i === 9 || i === 17) span.classList.add("w--accent");
     });
     manifestoEl.appendChild(frag);
-    if (manifestoTotal) manifestoTotal.textContent = String(words.length);
 
     if (reduceMotion) {
       words.forEach((w) => w.classList.add("is-lit"));
-      if (manifestoTrack) manifestoTrack.style.setProperty("--p", "1");
-      if (manifestoCount) manifestoCount.textContent = String(words.length);
     }
   }
 
@@ -263,8 +257,6 @@
     for (let i = 0; i < words.length; i++) {
       words[i].classList.toggle("is-lit", i < lit);
     }
-    if (manifestoTrack) manifestoTrack.style.setProperty("--p", String(p));
-    if (manifestoCount) manifestoCount.textContent = String(lit);
   }
 
   /* ------------------------------------------------------------------ */
