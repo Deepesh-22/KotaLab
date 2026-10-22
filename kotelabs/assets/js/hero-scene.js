@@ -134,6 +134,7 @@ function init(canvas) {
     uTime: { value: 0 },
     uScroll: { value: 0 },
     uOpen: { value: 0 },
+    uContentFade: { value: 0 },
     uSpread: { value: new THREE.Vector2(1, 1) },
     uPixelScale: { value: 1 },
     uPointer: { value: new THREE.Vector3(20, 20, 0) },
@@ -152,6 +153,7 @@ function init(canvas) {
     uniform float uTime;
     uniform float uScroll;
     uniform float uOpen;
+    uniform float uContentFade;
     uniform vec2 uSpread;
     uniform float uPixelScale;
     uniform vec3 uPointer;
@@ -183,7 +185,8 @@ function init(canvas) {
 
       vColor = aColor;
       vSeed = aSeed;
-      vFade = mix(1.0, 0.72, uOpen);
+      // Keep the scene vivid in the hero and soften it behind reading content.
+      vFade = mix(1.0, 0.36, uContentFade);
     }
   `;
 
@@ -291,12 +294,14 @@ function init(canvas) {
 
     const p = pageProgress;
     const open = smoothstep(0.015, 0.72, p);
+    const contentFade = smoothstep(0.035, 0.24, p);
     const mobile = group.userData.mobile;
     const shift = group.userData.shift || 0;
 
     uniforms.uTime.value = time;
     uniforms.uScroll.value = p;
     uniforms.uOpen.value = open;
+    uniforms.uContentFade.value = contentFade;
     uniforms.uAlpha.value = 1.0;
 
     group.position.x = mobile ? 0 : shift * (1.0 - open * 0.78);
@@ -315,7 +320,7 @@ function init(canvas) {
 
     // Keep the hero crisp; the scattered field remains visible, but lighter,
     // while the rest of the page scrolls over it.
-    canvas.style.opacity = String(1.0 - open * 0.22);
+    canvas.style.opacity = String(1.0 - contentFade * 0.32);
     renderer.render(scene, camera);
   }
 
