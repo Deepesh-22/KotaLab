@@ -1,0 +1,10 @@
+{
+  "name": "dala-landing-page",
+  "version": "1.0.0",
+  "description": "Exact 1:1 Dala landing page with WebGL 3D pyramidal particle brain animation, custom shaders, smooth scroll, and typography",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  }
+}

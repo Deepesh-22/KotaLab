@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<!--
+  ===========================================================================
+  KotaLabs — home page
+  ---------------------------------------------------------------------------
+  One page, hand-written, no build step. Read it top to bottom:
+  preloader → header + menu → hero → manifesto → marquee → services →
+  work slots → process → stats → pricing → founders → contact → CTA → footer.
+
+  Three conventions used all over this file:
+    .line > span       a line of a heading, masked; JS adds .is-in to reveal it
+    .word              one word, masked; used by the pinned manifesto
+    data-reveal        fade/slide-in on scroll (--i staggers the delay)
+
+  Two things that are easy to break:
+    • Every WhatsApp/tel number is written out in full — change one, change all.
+    • Prices are a <s>old</s> + .plan__off badge + .plan__now triple. Keep that
+      shape or the offer layout collapses (see styles.css → .plan__price).
+  ===========================================================================
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KotaLabs — Website studio in Kota, Rajasthan</title>
+<meta name="description" content="KotaLabs designs and builds fast, mobile-first websites with real 3D and motion. Made in Kota, Rajasthan. Launch offer: sites from ₹4,999. Talk to the founders on WhatsApp.">
+<meta name="theme-color" content="#050506">
+<meta name="author" content="KotaLabs">
+<link rel="canonical" href="https://kotelabs.com/">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="KotaLabs">
+<meta property="og:title" content="KotaLabs — Websites that make Kota businesses look national">
+<meta property="og:description" content="Design, code and 3D motion built in Kota, Rajasthan. Mobile-first, fast on a ₹10,000 phone. Launch offer: sites from ₹4,999.">
+<meta property="og:image" content="https://kotelabs.com/assets/img/og.jpg">
+<meta property="og:image:alt" content="KotaLabs wordmark over a headline, sitting above a cloud of pyramidal 3D particles.">
+<meta property="og:url" content="https://kotelabs.com/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="KotaLabs — Websites that make Kota businesses look national">
+<meta name="twitter:description" content="Design, code and 3D motion built in Kota, Rajasthan. Sites from ₹4,999.">
+<meta name="twitter:image" content="https://kotelabs.com/assets/img/og.jpg">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23c9f24d'/%3E%3Ctext x='32' y='44' font-family='Helvetica,Arial,sans-serif' font-size='34' font-weight='700' text-anchor='middle' fill='%230a0f02'%3EK%3C/text%3E%3C/svg%3E">
+<link rel="preload" href="assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/styles.css">
+<script>
+  /* Failsafe — if app.js is blocked, slow or throws, the page must never stay
+     stuck behind the preloader or leave sections invisible.
+     app.js sets window.__KL_BOOTED as its first statement, which disables all
+     of this. Runs before app.js and costs nothing on a normal load. */
+  (function () {
+    setTimeout(function () {
+      if (window.__KL_BOOTED) return;
+      document.body.classList.remove("is-loading");
+      var l = document.getElementById("loader");
+      if (l) { l.classList.add("is-done"); l.setAttribute("aria-hidden", "true"); }
+      document.querySelectorAll("[data-reveal], .line, .word, .w").forEach(function (el) {
+        el.classList.add("is-in");
+        el.classList.add("on");
+      });
+    }, 6000);
+  })();
+</script>
+<noscript><style>
+  [data-reveal]{opacity:1!important;transform:none!important}
+  .line>span,.word>span{transform:none!important}
+  .w{opacity:1!important}
+  .scene,.grade,.loader{display:none}
+  .grain{display:none}
+</style></noscript>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "KotaLabs",
+  "description": "Website design, development and 3D web experiences for businesses in Kota, Rajasthan.",
+  "url": "https://kotelabs.com/",
+  "image": "https://kotelabs.com/assets/img/og.jpg",
+  "telephone": "+917898140600",
+  "priceRange": "₹₹",
+  "areaServed": [
+    { "@type": "City", "name": "Kota" },
+    { "@type": "State", "name": "Rajasthan" },
+    { "@type": "Country", "name": "India" }
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Kota",
+    "addressRegion": "Rajasthan",
+    "addressCountry": "IN"
+  },
+  "founder": [
+    { "@type": "Person", "name": "Vansh Khandelwal", "telephone": "+917898140600" },
+    { "@type": "Person", "name": "Deepeesh Chauhan", "telephone": "+919462120133" }
+  ],
+  "openingHours": "Mo-Su 10:00-21:00",
+  "makesOffer": [
+    { "@type": "Offer", "name": "Launch website", "price": "4999", "priceCurrency": "INR" },
+    { "@type": "Offer", "name": "Business website", "price": "8999", "priceCurrency": "INR" },
+    { "@type": "Offer", "name": "Custom / 3D website", "price": "11000", "priceCurrency": "INR" }
+  ]
+}
+</script>
+</head>
+
+<body class="is-loading">
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="grade" aria-hidden="true"></div>
+<!-- 3D layer. data-src = lazy: app.js only loads hero-scene.js when this
+     canvas is in view, and never on reduced-motion / low-power devices. -->
+<canvas class="scene" id="scene" data-src="assets/js/hero-scene.js" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<!-- ============================== PRELOADER ============================== -->
+<div class="loader" id="loader" role="status" aria-live="polite" aria-label="Loading KotaLabs">
+  <div class="loader__top">
+    <a class="brand" href="index.html" aria-label="KotaLabs">
+      <span class="brand__mark" aria-hidden="true">K</span>
+      <span>KotaLabs<span class="brand__dot">.</span></span>
+    </a>
+    <span class="loader__label">Kota, Rajasthan</span>
+  </div>
+  <div class="loader__word" aria-hidden="true">
+    <span>Design</span><span>Build</span><span>Motion</span><span>Launch</span>
+  </div>
+  <div class="loader__bottom">
+    <span class="loader__label" id="loader-status">Preparing the scene</span>
+    <span class="loader__count"><span id="loader-num">0</span><span style="font-size:.22em;vertical-align:super;color:var(--muted-dim)">%</span></span>
+  </div>
+  <div class="loader__bar" aria-hidden="true"><i id="loader-bar"></i></div>
+</div>
+
+<!-- ============================== HEADER ============================== -->
+<header class="header">
+  <div class="shell header__inner">
+    <a class="brand" href="index.html" aria-label="KotaLabs — home">
+      <span class="brand__mark" aria-hidden="true">K</span>
+      <span>KotaLabs<span class="brand__dot">.</span></span>
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      <a class="nav__link" href="#manifesto">Manifesto</a>
+      <a class="nav__link" href="#services">Services</a>
+      <a class="nav__link" href="work.html">Work</a>
+      <a class="nav__link" href="#pricing">Pricing</a>
+      <a class="nav__link" href="#founders">Founders</a>
+    </nav>
+
+    <div class="header__actions">
+      <a class="btn btn--wa btn--sm" href="https://wa.me/917898140600?text=Hi%20KotaLabs!%20I%27d%20like%20to%20talk%20about%20a%20website%20for%20my%20business." target="_blank" rel="noopener">
+        <svg class="btn__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.86 9.86 0 0 0 4.79 1.22c5.46 0 9.92-4.45 9.92-9.91C21.96 6.45 17.5 2 12.04 2zm5.43 12.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.95 1.17-.17.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.5-.9-.8-1.5-1.79-1.68-2.09-.17-.3-.02-.47.13-.62.15-.15.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.49 0 1.47 1.07 2.89 1.22 3.09.15.2 2.1 3.34 5.1 4.55 2.99 1.2 3.11 1 3.67.95.56-.06 1.81-.74 2.06-1.45.25-.72.25-1.33.18-1.45-.08-.13-.28-.2-.58-.35z"/></svg>
+        WhatsApp us
+      </a>
+      <a class="btn btn--ghost btn--sm" href="#contact">Start a project</a>
+    </div>
+
+    <button class="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span><span></span>
+    </button>
+  </div>
+  <div class="header__progress" aria-hidden="true"></div>
+</header>
+
+<!-- Full-screen menu -->
+<div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+  <nav class="mobile-menu__list" aria-label="Menu">
+    <a class="mobile-menu__link" href="#manifesto" style="--i:0"><i>01</i> Manifesto</a>
+    <a class="mobile-menu__link" href="#services" style="--i:1"><i>02</i> Services</a>
+    <a class="mobile-menu__link" href="work.html" style="--i:2"><i>03</i> Work</a>
+    <a class="mobile-menu__link" href="#process" style="--i:3"><i>04</i> Process</a>
+    <a class="mobile-menu__link" href="#pricing" style="--i:4"><i>05</i> Pricing</a>
+    <a class="mobile-menu__link" href="#founders" style="--i:5"><i>06</i> Founders</a>
+    <a class="mobile-menu__link" href="#contact" style="--i:6"><i>07</i> Contact</a>
+  </nav>
+  <div class="mobile-menu__foot">
+    <a class="btn btn--wa" href="https://wa.me/917898140600?text=Hi%20KotaLabs!%20I%27d%20like%20a%20website%20for%20my%20business." target="_blank" rel="noopener">WhatsApp Vansh</a>
+    <a class="btn btn--ghost" href="tel:+919462120133">Call Deepesh · 94621 20133</a>
+    <p class="mobile-menu__phones">Kota, Rajasthan · Mon–Sun, 10am–9pm IST</p>
+  </div>
+</div>
+
+<main id="main">
+
+  <!-- ============================== HERO ============================== -->
+  <section class="hero" id="top">
+    <div class="hero__fallback" aria-hidden="true"></div>
+    <div class="hero__scrim" aria-hidden="true"></div>
+
+    <div class="shell hero__inner">
+      <div class="hero__meta-top">
+        <p class="eyebrow" data-reveal="fade">Design &amp; engineering studio · Kota, Rajasthan</p>
+        <p class="eyebrow eyebrow--plain mono" data-reveal="fade" style="--i:1;color:var(--lime-dim)">
+          <span style="width:5px;height:5px;border-radius:50%;background:var(--lime);display:inline-block"></span>
+          3 slots open for 2026
+        </p>
+      </div>
+
+      <h1>
+        <span class="line" style="--i:0"><span>Websites that</span></span>
+        <span class="line" style="--i:1"><span>make <strong>Kota</strong> businesses</span></span>
+        <span class="line" style="--i:2"><span>look national.</span></span>
+      </h1>
+
+      <div class="hero__row">
+        <div>
+          <p class="hero__sub" data-reveal style="--i:4">
+            We design and build fast, mobile-first websites with real 3D and motion — made here in Kota,
+            priced for businesses here, held to the standard of studios anywhere.
+          </p>
+          <div class="hero__cta" data-reveal style="--i:5">
+            <a class="btn btn--wa" href="https://wa.me/917898140600?text=Hi%20KotaLabs!%20I%27d%20like%20a%20website%20for%20my%20business.%20Can%20we%20talk%3F" target="_blank" rel="noopener">
+              <svg class="btn__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.86 9.86 0 0 0 4.79 1.22c5.46 0 9.92-4.45 9.92-9.91C21.96 6.45 17.5 2 12.04 2zm5.43 12.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.95 1.17-.17.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.5-.9-.8-1.5-1.79-1.68-2.09-.17-.3-.02-.47.13-.62.15-.15.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.49 0 1.47 1.07 2.89 1.22 3.09.15.2 2.1 3.34 5.1 4.55 2.99 1.2 3.11 1 3.67.95.56-.06 1.81-.74 2.06-1.45.25-.72.25-1.33.18-1.45-.08-.13-.28-.2-.58-.35z"/></svg>
+              WhatsApp us
+            </a>
+            <a class="btn btn--ghost" href="work.html">See our work</a>
+          </div>
+
+          <a class="hero__offer" href="#pricing" data-reveal style="--i:6">
+            <span class="hero__offer-tag">Launch offer</span>
+            <span>Sites from <strong>₹4,999</strong></span>
+            <span class="hero__offer-off">up to 47% off</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+
+        <div class="hero__aside" data-reveal style="--i:7">
+          <div class="hero__foot-founders">
+            <div class="avatar-stack" aria-hidden="true">
+              <span class="avatar avatar--sm"><img src="assets/img/vansh-sm.jpg" width="160" height="160" alt="" decoding="async"></span>
+              <span class="avatar avatar--sm avatar--alt">DC</span>
+            </div>
+            <span>Talk to the founders — <a href="tel:+917898140600">Vansh</a> or <a href="tel:+919462120133">Deepesh</a></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="shell hero__foot">
+      <span class="hero__scroll"><i aria-hidden="true"></i> Scroll</span>
+      <span>No templates · You own the code · Replies in 2 hours</span>
+      <span class="mono">Est. 2026</span>
+    </div>
+  </section>
+
+  <!-- ============================== MANIFESTO ============================== -->
+  <section class="manifesto" id="manifesto" aria-labelledby="manifesto-title">
+    <div class="manifesto__sticky">
+      <div class="shell">
+        <p class="eyebrow" style="margin-bottom:clamp(1.4rem,3vw,2.4rem)">Manifesto</p>
+        <div class="manifesto__inner">
+          <h2 class="manifesto__text" id="manifesto-title" data-manifesto>
+            Right now someone in Kota is searching for exactly what you sell. They will judge you in eight seconds — on a phone, on patchy 4G, long before they ever call. A slow, dated website does not lose you a click. It loses you the customer.
+          </h2>
+
+          <div class="manifesto__aside">
+            <p>
+              That is the whole pitch. We build the eight seconds properly: fast, mobile-first, and
+              good-looking enough that people screenshot it. Everything else is detail.
+            </p>
+            <div class="manifesto__track" aria-hidden="true"><i data-manifesto-track></i></div>
+            <p class="manifesto__tick">
+              Reading <b data-manifesto-count>0</b> / <b data-manifesto-total>0</b> words
+            </p>
+            <a class="btn btn--ghost btn--sm" href="#pricing">See the launch offer</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== MARQUEE ============================== -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track">
+      <div class="marquee__group">
+        <span class="marquee__item">Business websites</span>
+        <span class="marquee__item">E-commerce</span>
+        <span class="marquee__item">Landing pages</span>
+        <span class="marquee__item">3D &amp; motion</span>
+        <span class="marquee__item">SEO</span>
+        <span class="marquee__item">Branding</span>
+        <span class="marquee__item">Google Business</span>
+        <span class="marquee__item">Website care</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================== SERVICES ============================== -->
+  <section class="section" id="services">
+    <div class="shell">
+      <div class="section__head">
+        <div>
+          <p class="eyebrow">What we do</p>
+          <h2 class="h2" data-lines>
+            <span class="line" style="--i:0"><span>Everything a Kota business</span></span>
+            <span class="line" style="--i:1"><span>needs to look <strong>serious</strong> online.</span></span>
+          </h2>
+        </div>
+        <p class="lede" data-reveal style="--i:2">
+          One team for design, code and content — so you are not coordinating three freelancers
+          and a cousin who knows computers.
+        </p>
+      </div>
+
+      <div class="caps">
+        <a class="cap" href="https://wa.me/917898140600?text=Hi%20KotaLabs!%20I%20need%20a%20business%20website." target="_blank" rel="noopener" data-reveal style="--i:0">
+          <span class="cap__num">01</span>
+          <h3 class="cap__title">Business websites</h3>
+          <div>
+            <p class="cap__text">Five to ten pages for shops, clinics, coaching institutes and local services. Clear structure, fast, easy for you to update.</p>
+            <div class="cap__tags"><span class="tag">Design</span><span class="tag">Build</span><span class="tag">SEO basics</span></div>
+          </div>
+          <span class="cap__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+        </a>
+
+        <a class="cap" href="https://wa.me/917898140600?text=Hi%20KotaLabs!%20I%20want%20to%20sell%20online." target="_blank" rel="noopener" data-reveal style="--i:1">
+          <span class="cap__num">02</span>
+          <h3 class="cap__title">E-commerce</h3>
+          <div>
+            <p class="cap__text">Sell online with payments, delivery zones and a catalogue you can edit yourself — no developer needed for a new product.</p>
+            <div class="cap__tags"><span class="tag">Payments</span><span class="tag">Catalogue</span><span class="tag">Shipping</span></div>
+          </div>
+          <span class="cap__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+        </a>
+
+        <a class="cap" href="https://wa.me/917898140600?text=Hi%20KotaLabs!%20I%20need%20a%20landing%20page%20for%20ads." target="_blank" rel="noopener" data-reveal style="--i:2">
+          <span class="cap__num">03</span>
+          <h3 class="cap__title">Landing pages</h3>
+          <div>
+            <p class="cap__text">One page, one goal: bookings, enquiries or admissions. Built to run behind Google and Instagram ads, with tracking that works.</p>
+            <div class="cap__tags"><span class="tag">Ads</span><span class="tag">Forms</span><span class="tag">Analytics</span></div>
+          </div>
+          <span class="cap__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+        </a>
+
+        <a class="cap" href="https://wa.me/917898140600?text=Hi%20KotaLabs!%20I%27m%20interested%20in%20a%203D%20website." target="_blank" rel="noopener" data-reveal style="--i:3">
+          <span class="cap__num">04</span>
+          <h3 class="cap__title">3D &amp; motion</h3>
+          <div>
+            <p class="cap__text">Three.js scenes, scroll animation and product showcases — the kind of site that gets screenshotted and shared. Like the one you are on.</p>
+            <div class="cap__tags"><span class="tag">Three.js</span><span class="tag">GLSL</span><span class="tag">WebGL</span></div>
+          </div>
+          <span class="cap__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== WORK ============================== -->
+  <section class="section" id="work">
+    <div class="shell">
+      <div class="section__head">
+        <div>
+          <p class="eyebrow">Work</p>
+          <h2 class="h2" data-lines>
+            <span class="line" style="--i:0"><span>Three project slots open.</span></span>
+            <span class="line" style="--i:1"><span><strong>Yours could be first.</strong></span></span>
+          </h2>
+        </div>
+        <p class="lede" data-reveal style="--i:2">
+          We are a new studio, so this section is honestly empty. We would rather show three real
+          projects with real numbers than ten borrowed screenshots.
+        </p>
+      </div>
+
+      <div class="work-note"><i aria-hidden="true"></i> Project slots — 0 of 3 taken</div>
+
+      <div class="slots">
+        <article class="slot" data-reveal="scale" style="--i:0">
+          <div class="slot__top">
+            <span class="slot__id">SLOT / 01</span>
+            <span class="slot__status">Open</span>
+          </div>
+          <div>
+            <h3 class="slot__title">Your business<br>could be here.</h3>
+            <p class="slot__meta">Retail · Clinic · Coaching · Restaurant · Services</p>
+          </div>
+          <div class="slot__foot">
+            <a class="link-arrow" href="https://wa.me/917898140600?text=Hi%20KotaLabs!%20I%27d%20like%20to%20claim%20one%20of%20your%20first%20project%20slots." target="_blank" rel="noopener">Claim this slot</a>
+            <span class="mono" style="color:var(--muted-dim);font-size:.68rem">3–4 WEEKS</span>
+          </div>
+        </article>
+
+        <article class="slot" data-reveal="scale" style="--i:1">
+          <div class="slot__top">
+            <span class="slot__id">SLOT / 02</span>
+            <span class="slot__status">Open</span>
+          </div>
+          <div>
+            <h3 class="slot__title">A launch partner<br>for your brand.</h3>
+            <p class="slot__meta">Founding-client pricing · Direct founder access · Faster timelines</p>
+          </div>
+          <div class="slot__foot">
+            <a class="link-arrow" href="https://wa.me/919462120133?text=Hi%20KotaLabs!%20I%20want%20to%20know%20about%20founding-client%20pricing." target="_blank" rel="noopener">Ask about pricing</a>
+            <span class="mono" style="color:var(--muted-dim);font-size:.68rem">LIMITED</span>
+          </div>
+        </article>
+
+        <article class="slot" data-reveal="scale" style="--i:2">
+          <div class="slot__top">
+            <span class="slot__id">SLOT / 03</span>
+            <span class="slot__status">Open</span>
+          </div>
+          <div>
+            <h3 class="slot__title">A 3D site your<br>competitors can't copy.</h3>
+            <p class="slot__meta">Three.js / WebGL · Product showcase · Award-style motion</p>
+          </div>
+          <div class="slot__foot">
+            <a class="link-arrow" href="https://wa.me/917898140600?text=Hi%20KotaLabs!%20I%27m%20interested%20in%20a%203D%20website." target="_blank" rel="noopener">Start a 3D project</a>
+            <span class="mono" style="color:var(--muted-dim);font-size:.68rem">PREMIUM</span>
+          </div>
+        </article>
+      </div>
+
+      <p style="margin-top:2rem" data-reveal>
+        <a class="btn btn--ghost" href="work.html">Visit the work page
+          <svg class="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================== PROCESS ============================== -->
+  <section class="section" id="process">
+    <div class="shell">
+      <div class="process">
+        <div class="process__aside">
+          <p class="eyebrow">Process</p>
+          <h2 class="h2" data-lines style="margin-top:1rem">
+            <span class="line" style="--i:0"><span>From first call to</span></span>
+            <span class="line" style="--i:1"><span>live site in <strong>3–4 weeks.</strong></span></span>
+          </h2>
+          <p class="lede" data-reveal style="--i:2;margin-top:1.2rem">
+            No forty-page proposals. You will know exactly what happens each week, who is doing it,
+            and what we need from you.
+          </p>
+          <p data-reveal style="--i:3;margin-top:1.5rem">
+            <a class="btn btn--solid btn--sm" href="#contact">Start a project</a>
+          </p>
+        </div>
+
+        <div class="process__rail">
+          <article class="process__step">
+            <span class="process__num">01</span>
+            <div>
+              <h3 class="process__title">Discover</h3>
+              <p class="process__text">A twenty-minute call — WhatsApp, or in person in Kota. We look at your business, your customers and what a visitor should do on the site. You get a fixed quote and timeline in writing.</p>
+              <p class="process__meta">Day 1–2 · Free</p>
+            </div>
+          </article>
+
+          <article class="process__step">
+            <span class="process__num">02</span>
+            <div>
+              <h3 class="process__title">Design</h3>
+              <p class="process__text">First we show you the homepage design — text, layout and colour. You see it before a line of code is written, so changes are cheap and fast.</p>
+              <p class="process__meta">Week 1–2 · 2 revision rounds</p>
+            </div>
+          </article>
+
+          <article class="process__step">
+            <span class="process__num">03</span>
+            <div>
+              <h3 class="process__title">Build</h3>
+              <p class="process__text">We build it for real devices, test on a cheap Android phone over 4G, and wire up WhatsApp, call buttons, forms, maps and Google. You get a private preview link to share before launch.</p>
+              <p class="process__meta">Week 2–3 · Preview link</p>
+            </div>
+          </article>
+
+          <article class="process__step">
+            <span class="process__num">04</span>
+            <div>
+              <h3 class="process__title">Launch &amp; support</h3>
+              <p class="process__text">We connect your domain, set up Analytics and Search Console, help you claim your Google Business Profile, and stay on WhatsApp for fixes after launch.</p>
+              <p class="process__meta">Week 4 · 30–60 days support</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== STATS ============================== -->
+  <section class="section section--tight section--flush" aria-label="How we work, in numbers">
+    <div class="shell">
+      <div class="stats">
+        <div class="stat" data-reveal style="--i:0">
+          <p class="stat__num"><span data-count="3">3</span>–4 <em>weeks</em></p>
+          <p class="stat__label">Typical build time, start to live</p>
+        </div>
+        <div class="stat" data-reveal style="--i:1">
+          <p class="stat__num">&lt;<span data-count="2.5" data-suffix="s">2.5s</span></p>
+          <p class="stat__label">Load target on a ₹10,000 phone over 4G</p>
+        </div>
+        <div class="stat" data-reveal style="--i:2">
+          <p class="stat__num"><span data-count="100" data-suffix="%">100%</span> <em>yours</em></p>
+          <p class="stat__label">Code and domain handover — no lock-in</p>
+        </div>
+        <div class="stat" data-reveal style="--i:3">
+          <p class="stat__num">2 <em>hrs</em></p>
+          <p class="stat__label">Average reply time, 10am–9pm IST</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== PRICING ============================== -->
+  <section class="section" id="pricing">
+    <div class="shell">
+      <div class="section__head">
+        <div>
+          <p class="eyebrow">Pricing</p>
+          <h2 class="h2" data-lines>
+            <span class="line" style="--i:0"><span>Real numbers. No</span></span>
+            <span class="line" style="--i:1"><span><strong>“contact us for quote”</strong> games.</span></span>
+          </h2>
+        </div>
+        <p class="lede" data-reveal style="--i:2">
+          The struck-through figure is our regular price. You pay the offer price while the first
+          three project slots last. Final quote after a fifteen-minute call.
+        </p>
+      </div>
+
+      <div class="offer-strip" data-reveal>
+        <span class="offer-strip__tag"><i aria-hidden="true"></i> Launch offer</span>
+        <p>
+          <strong>Up to 47% off</strong> every package for our first three clients — plus founding-client
+          support and a written case study. Offer ends when the three slots are filled.
+        </p>
+        <a class="btn btn--solid btn--sm" href="https://wa.me/917898140600?text=Hi%20KotaLabs!%20I%20want%20to%20claim%20the%20launch%20offer%20pricing%20before%20the%20slots%20fill%20up." target="_blank" rel="noopener">Claim the offer</a>
+      </div>
+
+      <div class="plans">
+        <!-- Pricing card pattern: struck-through regular price + % off badge +
+             offer price. Duplicate an <article class="plan"> to add a plan. -->
+        <!-- Launch -->
+        <article class="plan" data-reveal style="--i:0">
+          <p class="plan__name">Launch</p>
+          <p class="plan__price">
+            <span class="plan__was"><span class="sr-only">Regular price</span><s>₹8,999</s><span class="plan__off">44% off</span></span>
+            <span class="plan__now"><span class="cur">₹</span>4,999</span>
+            <small>one-time · GST extra · you save ₹4,000</small>
+          </p>
+          <p class="plan__desc">For a single-location business that needs a clean, credible presence — at launch pricing.</p>
+
+          <div class="acc" data-open-desktop>
+            <button class="acc__btn" type="button" aria-expanded="false" aria-controls="inc-launch">
+              What's included — 6 items <i aria-hidden="true"></i>
+            </button>
+            <div class="acc__panel" id="inc-launch">
+              <div>
+                <ul class="plan__list">
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>Up to 5 pages</li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>Mobile-first custom design</li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>WhatsApp &amp; click-to-call</li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>Enquiry form + Google Maps</li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>SEO basics &amp; Analytics</li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>2 revision rounds · 10–14 days</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <a class="btn btn--ghost btn--block" href="https://wa.me/917898140600?text=Hi%20KotaLabs!%20I%27m%20interested%20in%20the%20Launch%20package%20(%E2%82%B94%2C999%20launch%20offer)." target="_blank" rel="noopener">Discuss Launch</a>
+        </article>
+
+        <!-- Business -->
+        <article class="plan plan--featured" data-reveal style="--i:1">
+          <span class="plan__badge">Most chosen</span>
+          <p class="plan__name">Business</p>
+          <p class="plan__price">
+            <span class="plan__was"><span class="sr-only">Regular price</span><s>₹12,000</s><span class="plan__off">25% off</span></span>
+            <span class="plan__now"><span class="cur">₹</span>8,999</span>
+            <small>one-time · GST extra · you save ₹3,000+</small>
+          </p>
+          <p class="plan__desc">The full sales asset: more pages, real animation, and a site you can edit yourself.</p>
+
+          <div class="acc" data-open-desktop>
+            <button class="acc__btn" type="button" aria-expanded="false" aria-controls="inc-business">
+              What's included — 6 items <i aria-hidden="true"></i>
+            </button>
+            <div class="acc__panel" id="inc-business">
+              <div>
+                <ul class="plan__list">
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>Up to 10 pages, fully custom</li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>Scroll animation &amp; motion system</li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>Blog / catalogue you can update</li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>Google Business Profile setup</li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>Search Console + speed tuning</li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>3 revisions · 3–4 weeks · 60 days support</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <a class="btn btn--solid btn--block" href="https://wa.me/917898140600?text=Hi%20KotaLabs!%20I%27m%20interested%20in%20the%20Business%20package%20(%E2%82%B98%2C999%20launch%20offer)." target="_blank" rel="noopener">Discuss Business</a>
+        </article>
+
+        <!-- Custom -->
+        <article class="plan" data-reveal style="--i:2">
+          <p class="plan__name">Custom / 3D</p>
+          <p class="plan__price">
+            <span class="plan__was"><span class="sr-only">Regular price</span><s>₹21,000</s><span class="plan__off">47% off</span></span>
+            <span class="plan__now"><span class="cur">₹</span>11,000</span>
+            <small>starting price · scoped per project · you save ₹10,000</small>
+          </p>
+          <p class="plan__desc">E-commerce, booking systems, or a Three.js site built to win attention. Entry price shown; scoped after the call.</p>
+
+          <div class="acc" data-open-desktop>
+            <button class="acc__btn" type="button" aria-expanded="false" aria-controls="inc-custom">
+              What's included — 6 items <i aria-hidden="true"></i>
+            </button>
+            <div class="acc__panel" id="inc-custom">
+              <div>
+                <ul class="plan__list">
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>Three.js / WebGL hero &amp; scroll scenes</li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>Sales copy &amp; visual direction</li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>Payments, bookings or dashboards</li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>Performance budget on real devices</li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>4 revision rounds · 5–8 weeks</li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M4 12.5 9.5 18 20 6.5"/></svg>Optional monthly care plan</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <a class="btn btn--ghost btn--block" href="https://wa.me/917898140600?text=Hi%20KotaLabs!%20I%27d%20like%20to%20discuss%20a%20custom%20%2F%203D%20project%20(starting%20%E2%82%B911%2C000%20launch%20offer)." target="_blank" rel="noopener">Discuss custom</a>
+        </article>
+      </div>
+
+      <p class="price-note" data-reveal>
+        Offer prices apply to the first three projects only; after that the regular prices (₹8,999 / ₹12,000 / ₹21,000)
+        apply. Domain and hosting billed at actual cost (usually ₹1,500–₹4,000/year). Payment: 50% to start, 50% at launch.
+        Content writing, photography and paid ad spend are extra. No hidden charges — the quoted offer price is what you pay.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================== FOUNDERS ============================== -->
+  <section class="section" id="founders">
+    <div class="shell">
+      <div class="section__head">
+        <div>
+          <p class="eyebrow">Founders</p>
+          <h2 class="h2" data-lines>
+            <span class="line" style="--i:0"><span>Two people.</span></span>
+            <span class="line" style="--i:1"><span><strong>One WhatsApp away.</strong></span></span>
+          </h2>
+        </div>
+        <p class="lede" data-reveal style="--i:2">
+          You will talk to the people who actually design and build your site — no account manager,
+          no call centre, no ticket number.
+        </p>
+      </div>
+
+      <div class="founders">
+        <article class="founder" data-reveal style="--i:0">
+          <div class="founder__head">
+            <!-- Founder photo: square crop, circle-masked by CSS. To swap it,
+                 replace assets/img/vansh.jpg (560×560) and vansh-sm.jpg (160×160).
+                 Deepeesh still uses the .avatar initials below until he sends one. -->
+            <span class="founder__photo">
+              <img src="assets/img/vansh.jpg" width="560" height="560" alt="Vansh Khandelwal, co-founder of KotaLabs" decoding="async">
+            </span>
+            <div>
+              <h3 class="founder__name">Vansh Khandelwal</h3>
+              <p class="founder__role">Co-founder · KotaLabs</p>
+            </div>
+          </div>
+          <p class="founder__line">New projects, pricing and timelines. Send your business name and what you want the site to do — you will get an honest answer within a couple of hours.</p>
+          <a class="founder__phone" href="tel:+917898140600">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6.6 3.5h2.2l1.6 4-2 1.3a12 12 0 0 0 6.8 6.8l1.3-2 4 1.6v2.2a2.1 2.1 0 0 1-2.3 2.1C10.9 18.8 5.2 13.1 4.5 5.8A2.1 2.1 0 0 1 6.6 3.5z"/></svg>
+            +91 78981 40600
+          </a>
+          <div class="founder__actions">
+            <a class="btn btn--wa btn--sm" href="https://wa.me/917898140600?text=Hi%20Vansh%2C%20I%20found%20KotaLabs%20online.%20I%27d%20like%20to%20discuss%20a%20website." target="_blank" rel="noopener">WhatsApp Vansh</a>
+            <a class="btn btn--ghost btn--sm" href="tel:+917898140600">Call</a>
+          </div>
+        </article>
+
+        <article class="founder" data-reveal style="--i:1">
+          <div class="founder__head">
+            <span class="avatar avatar--alt" aria-hidden="true">DC</span>
+            <div>
+              <h3 class="founder__name">Deepeesh Chauhan</h3>
+              <p class="founder__role">Co-founder · KotaLabs</p>
+            </div>
+          </div>
+          <p class="founder__line">Design, build progress and everything after launch. If something breaks or you need a change, this is the number that answers.</p>
+          <a class="founder__phone" href="tel:+919462120133">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6.6 3.5h2.2l1.6 4-2 1.3a12 12 0 0 0 6.8 6.8l1.3-2 4 1.6v2.2a2.1 2.1 0 0 1-2.3 2.1C10.9 18.8 5.2 13.1 4.5 5.8A2.1 2.1 0 0 1 6.6 3.5z"/></svg>
+            +91 94621 20133
+          </a>
+          <div class="founder__actions">
+            <a class="btn btn--wa btn--sm" href="https://wa.me/919462120133?text=Hi%20Deepesh%2C%20I%20found%20KotaLabs%20online.%20I%27d%20like%20to%20discuss%20a%20website." target="_blank" rel="noopener">WhatsApp Deepesh</a>
+            <a class="btn btn--ghost btn--sm" href="tel:+919462120133">Call</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== CONTACT ============================== -->
+  <section class="section" id="contact">
+    <div class="shell">
+      <div class="contact">
+        <div>
+          <p class="eyebrow">Contact</p>
+          <h2 class="h2" data-lines style="margin-top:0.9rem">
+            <span class="line" style="--i:0"><span>Tell us about your business.</span></span>
+            <span class="line" style="--i:1"><span><strong>We'll reply today.</strong></span></span>
+          </h2>
+          <p class="lede" data-reveal style="--i:2;margin-top:1.1rem">
+            WhatsApp is fastest — it is how Kota does business. Or fill the form and it opens WhatsApp
+            with your details already written out.
+          </p>
+
+          <div class="contact__quick">
+            <a class="quick-card" href="https://wa.me/917898140600?text=Hi%20KotaLabs!%20I%27d%20like%20to%20talk%20about%20a%20website%20for%20my%20business." target="_blank" rel="noopener" data-reveal style="--i:3">
+              <span class="quick-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.86 9.86 0 0 0 4.79 1.22c5.46 0 9.92-4.45 9.92-9.91C21.96 6.45 17.5 2 12.04 2zm5.43 12.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.95 1.17-.17.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.5-.9-.8-1.5-1.79-1.68-2.09-.17-.3-.02-.47.13-.62.15-.15.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.49 0 1.47 1.07 2.89 1.22 3.09.15.2 2.1 3.34 5.1 4.55 2.99 1.2 3.11 1 3.67.95.56-.06 1.81-.74 2.06-1.45.25-.72.25-1.33.18-1.45-.08-.13-.28-.2-.58-.35z"/></svg>
+              </span>
+              <span>
+                <strong>WhatsApp Vansh</strong>
+                <span>+91 78981 40600</span>
+              </span>
+            </a>
+
+            <a class="quick-card" href="tel:+917898140600" data-reveal style="--i:4">
+              <span class="quick-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6.6 3.5h2.2l1.6 4-2 1.3a12 12 0 0 0 6.8 6.8l1.3-2 4 1.6v2.2a2.1 2.1 0 0 1-2.3 2.1C10.9 18.8 5.2 13.1 4.5 5.8A2.1 2.1 0 0 1 6.6 3.5z"/></svg>
+              </span>
+              <span>
+                <strong>Call Vansh</strong>
+                <span>+91 78981 40600</span>
+              </span>
+            </a>
+
+            <a class="quick-card" href="https://wa.me/919462120133?text=Hi%20KotaLabs!%20I%27d%20like%20to%20talk%20about%20a%20website%20for%20my%20business." target="_blank" rel="noopener" data-reveal style="--i:5">
+              <span class="quick-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.86 9.86 0 0 0 4.79 1.22c5.46 0 9.92-4.45 9.92-9.91C21.96 6.45 17.5 2 12.04 2zm5.43 12.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.95 1.17-.17.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.5-.9-.8-1.5-1.79-1.68-2.09-.17-.3-.02-.47.13-.62.15-.15.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.49 0 1.47 1.07 2.89 1.22 3.09.15.2 2.1 3.34 5.1 4.55 2.99 1.2 3.11 1 3.67.95.56-.06 1.81-.74 2.06-1.45.25-.72.25-1.33.18-1.45-.08-.13-.28-.2-.58-.35z"/></svg>
+              </span>
+              <span>
+                <strong>WhatsApp Deepesh</strong>
+                <span>+91 94621 20133</span>
+              </span>
+            </a>
+
+            <a class="quick-card" href="tel:+919462120133" data-reveal style="--i:6">
+              <span class="quick-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6.6 3.5h2.2l1.6 4-2 1.3a12 12 0 0 0 6.8 6.8l1.3-2 4 1.6v2.2a2.1 2.1 0 0 1-2.3 2.1C10.9 18.8 5.2 13.1 4.5 5.8A2.1 2.1 0 0 1 6.6 3.5z"/></svg>
+              </span>
+              <span>
+                <strong>Call Deepesh</strong>
+                <span>+91 94621 20133</span>
+              </span>
+            </a>
+          </div>
+        </div>
+
+        <form class="form" id="project-form" data-reveal="scale" novalidate>
+          <div class="form__row">
+            <div class="field">
+              <label for="name">Your name</label>
+              <input id="name" name="name" type="text" autocomplete="name" placeholder="Rahul Sharma" required>
+            </div>
+            <div class="field">
+              <label for="phone">Phone / WhatsApp</label>
+              <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="98XXXXXXXX" required>
+            </div>
+          </div>
+
+          <div class="form__row">
+            <div class="field">
+              <label for="business">Business</label>
+              <input id="business" name="business" type="text" placeholder="Sharma Coaching Classes" required>
+            </div>
+            <div class="field">
+              <label for="budget">Budget</label>
+              <select id="budget" name="budget">
+                <option>Not sure yet</option>
+                <option>Under ₹5,000</option>
+                <option>₹5,000 – ₹10,000</option>
+                <option>₹10,000 – ₹25,000</option>
+                <option>₹25,000 – ₹50,000</option>
+                <option>Above ₹50,000</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="brief">What do you need?</label>
+            <textarea id="brief" name="brief" placeholder="Example: I run a coaching institute in Rajeev Gandhi Nagar. I need a site with courses, faculty, results and an admission enquiry form. Should be easy for parents to use on mobile."></textarea>
+          </div>
+
+          <div class="form__foot">
+            <button class="btn btn--wa" type="submit">
+              <svg class="btn__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.86 9.86 0 0 0 4.79 1.22c5.46 0 9.92-4.45 9.92-9.91C21.96 6.45 17.5 2 12.04 2zm5.43 12.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.95 1.17-.17.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.5-.9-.8-1.5-1.79-1.68-2.09-.17-.3-.02-.47.13-.62.15-.15.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.49 0 1.47 1.07 2.89 1.22 3.09.15.2 2.1 3.34 5.1 4.55 2.99 1.2 3.11 1 3.67.95.56-.06 1.81-.74 2.06-1.45.25-.72.25-1.33.18-1.45-.08-.13-.28-.2-.58-.35z"/></svg>
+              Send on WhatsApp
+            </button>
+            <p class="form__hint">This opens WhatsApp with your details filled in — nothing is stored on a server.</p>
+          </div>
+          <p class="form__status" id="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== CTA BAND ============================== -->
+  <section class="cta-band">
+    <div class="shell cta-band__inner">
+      <h2 data-lines>
+        <span class="line" style="--i:0"><span>Your customers are already</span></span>
+        <span class="line" style="--i:1"><span>searching. <em>Give them somewhere</em></span></span>
+        <span class="line" style="--i:2"><span><em>good to land.</em></span></span>
+      </h2>
+      <div class="cta-band__actions" data-reveal style="--i:1">
+        <a class="btn btn--wa" href="https://wa.me/917898140600?text=Hi%20KotaLabs!%20I%27d%20like%20a%20website%20for%20my%20business." target="_blank" rel="noopener">WhatsApp us</a>
+        <a class="btn btn--ghost" href="tel:+917898140600">Call now</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============================== FOOTER ============================== -->
+<footer class="footer">
+  <div class="shell">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <a class="brand" href="index.html">
+          <span class="brand__mark" aria-hidden="true">K</span>
+          <span>KotaLabs<span class="brand__dot">.</span></span>
+        </a>
+        <p>Web design, development and 3D experiences for businesses in Kota, Rajasthan. Built here, held to a national standard.</p>
+      </div>
+
+      <div class="footer__col">
+        <h3>Explore</h3>
+        <ul>
+          <li><a href="#manifesto">Manifesto</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="work.html">Work</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#founders">Founders</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <h3>Talk to us</h3>
+        <ul>
+          <li><a href="https://wa.me/917898140600" target="_blank" rel="noopener">WhatsApp · Vansh</a></li>
+          <li><a href="tel:+917898140600">+91 78981 40600</a></li>
+          <li><a href="https://wa.me/919462120133" target="_blank" rel="noopener">WhatsApp · Deepesh</a></li>
+          <li><a href="tel:+919462120133">+91 94621 20133</a></li>
+          <li><a href="mailto:hello@kotelabs.com">hello@kotelabs.com</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer__wordmark" aria-hidden="true">KotaLabs</div>
+
+    <div class="footer__bottom">
+      <span>© <span data-year>2026</span> KotaLabs · Kota, Rajasthan 324005</span>
+      <span class="mono">Mon–Sun · 10:00–21:00 IST</span>
+      <span class="mono">Made in Kota, designed for India</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Floating WhatsApp -->
+<a class="wa-fab" href="https://wa.me/917898140600?text=Hi%20KotaLabs!%20I%27d%20like%20to%20talk%20about%20a%20website%20for%20my%20business." target="_blank" rel="noopener" aria-label="Chat with KotaLabs on WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.86 9.86 0 0 0 4.79 1.22c5.46 0 9.92-4.45 9.92-9.91C21.96 6.45 17.5 2 12.04 2zm5.43 12.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.95 1.17-.17.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.5-.9-.8-1.5-1.79-1.68-2.09-.17-.3-.02-.47.13-.62.15-.15.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.49 0 1.47 1.07 2.89 1.22 3.09.15.2 2.1 3.34 5.1 4.55 2.99 1.2 3.11 1 3.67.95.56-.06 1.81-.74 2.06-1.45.25-.72.25-1.33.18-1.45-.08-.13-.28-.2-.58-.35z"/></svg>
+  <span class="wa-fab__label">WhatsApp</span>
+</a>
+
+<script src="assets/js/app.js" defer></script>
+</body>
+</html>
