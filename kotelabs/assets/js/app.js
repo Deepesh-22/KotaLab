@@ -383,7 +383,7 @@
         get("budget") ? `Budget: ${get("budget")}` : null,
         get("brief") ? `About the project: ${get("brief")}` : null,
         "",
-        "Sent from kotelabs.com",
+        "Website: https://kotalabs.vercel.app/",
       ].filter(Boolean);
 
       window.open(`https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(lines.join("\n"))}`, "_blank", "noopener");

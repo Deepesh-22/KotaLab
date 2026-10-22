@@ -34,7 +34,7 @@ ES modules and the `THREE` import need `http://`, not `file://`.
 | **GitHub Pages** | Push, then Settings → Pages → deploy from branch root. |
 | **cPanel / Hostinger** | Upload the folder contents to `public_html`. |
 
-Then point the domain (`kotelabs.com` — buy from GoDaddy/Namecheap/Hostinger, ₹800–1,200/year) at the host.
+The current site URL is `https://kotalabs.vercel.app/`. Add a custom domain only if you own one, then update the canonical and social metadata to match.
 
 **Pushing to GitHub for the first time**
 
@@ -116,7 +116,7 @@ numbers beats ten screenshots.**
 
 ## 5. Before you go live — small checklist
 
-- [ ] Replace `https://kotelabs.com/` in the `<link rel="canonical">`, `og:url`, `sitemap.xml` and `robots.txt` with your real domain.
+- [ ] Verify the canonical URL, Open Graph URL, `sitemap.xml` and `robots.txt` use `https://kotalabs.vercel.app/` (or your custom domain if configured).
 - [ ] Create `hello@kotelabs.com` (or change the mailto).
 - [ ] Add Google Analytics 4 or Plausible — one `<script>` before `</body>`.
 - [ ] Claim the **Google Business Profile** for "KotaLabs, Kota" (this drives local calls more than the site does).
@@ -210,7 +210,7 @@ To swap or add a photo (e.g. Deepesh later):
 ```html
 <span class="founder__photo">
   <img src="assets/img/deepesh.jpg" width="560" height="560"
-       alt="Deepeesh Chauhan, co-founder of KotaLabs" decoding="async">
+       alt="Deepeesh Chauhan, founder of KotaLabs" decoding="async">
 </span>
 ```
 
