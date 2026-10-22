@@ -4,7 +4,7 @@ A production-ready, hand-coded marketing site for a web-design studio in Kota, R
 No build step, no npm install, no framework. Upload the folder and it runs.
 
 - **Live pages:** `index.html` (home), `work.html` (empty-state work page), `404.html`
-- **3D:** one persistent Three.js + GLSL layer behind the *whole page* — a warm-white spiral galaxy made from tiny circular particles, with a bright core, gentle twinkle, cursor wake, and a **scroll-driven dispersion** that opens the spiral into a screen-wide dust field. Uses 22,000 particles on desktop, 9,200 on mobile, and 5,200 on low-power devices. Loaded lazily; never downloaded for reduced-motion users.
+- **3D:** one persistent Three.js + GLSL layer behind the *whole page* — a warm-white spiral galaxy made from tiny circular particles, with a bright core, gentle twinkle, cursor wake, and a **scroll-driven dispersion** that opens the spiral into a screen-wide dust field. Uses 32,000 particles on desktop, 15,000 on mobile, and 7,600 on low-power devices. Loaded lazily; never downloaded for reduced-motion users.
 - **Type:** Geist + Geist Mono (display / labels) and Inter (body), all self-hosted
 - **Animation:** counting preloader, masked line reveals, a pinned word-by-word manifesto, scroll progress bar, scroll colour grading, sticky process rail, counters, marquee, accordions, magnetic buttons, and a gradient footer wordmark with a wipe + travelling sheen — all hand-written, no GSAP / no Lenis, ~34 KB of JS total
 - **Contacts:** WhatsApp deep links (with pre-filled messages) for both founders + click-to-call + a form that opens WhatsApp with the details already written
@@ -183,7 +183,7 @@ There is no build step: what you edit is what ships. Comments are deliberately s
 | Situation | Behaviour |
 |---|---|
 | Desktop, normal | A warm-white spiral galaxy of tiny dots, with a bright core, soft twinkle and a subtle cursor wake |
-| Phone / tablet | Same scene, centred, DPR clamped to 1.5, 9.2k particles (5.2k on low-power) |
+| Phone / tablet | Same scene, centred, DPR clamped to 1.5, 15k particles (7.6k on low-power) |
 | Scrolling down the page | The spiral gradually loosens into a screen-wide field of particles; the dust stays subtle behind content |
 | `prefers-reduced-motion: reduce` | Three.js is never downloaded; the static CSS galaxy fallback is shown |
 | No WebGL / context lost | The canvas is removed and the CSS galaxy fallback remains |

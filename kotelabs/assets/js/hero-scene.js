@@ -51,7 +51,7 @@ function init(canvas) {
   /* ================================================================== */
   /* 1. Spiral galaxy particles                                         */
   /* ================================================================== */
-  const COUNT = lowPower ? 5200 : smallScreen ? 9200 : 22000;
+  const COUNT = lowPower ? 7600 : smallScreen ? 15000 : 32000;
   const galaxy = new Float32Array(COUNT * 3);
   const scatter = new Float32Array(COUNT * 3);
   const colors = new Float32Array(COUNT * 3);
@@ -75,7 +75,7 @@ function init(canvas) {
       x = Math.cos(angle) * radius;
       y = Math.sin(angle) * radius * 0.62;
       z = (rand() + rand() + rand() - 1.5) * 0.16;
-      brightness = 0.74 + rand() * 0.62;
+      brightness = 1.05 + rand() * 0.8;
     } else if (halo) {
       // A sparse, imperfect outer halo gives the spiral a dusty edge.
       const angle = rand() * TAU;
@@ -83,7 +83,7 @@ function init(canvas) {
       x = Math.cos(angle) * radius;
       y = Math.sin(angle) * radius * 0.56;
       z = (rand() + rand() + rand() - 1.5) * 0.17;
-      brightness = 0.2 + rand() * 0.42;
+      brightness = 0.38 + rand() * 0.48;
     } else {
       // Three logarithmically winding arms, with soft width and radial grain.
       const arm = Math.floor(rand() * ARM_COUNT);
@@ -96,7 +96,7 @@ function init(canvas) {
       x = Math.cos(angle) * r;
       y = Math.sin(angle) * r * 0.58;
       z = (rand() + rand() + rand() - 1.5) * (0.075 + radius * 0.025);
-      brightness = 0.42 + rand() * 0.66;
+      brightness = 0.78 + rand() * 0.86;
     }
 
     const j = i * 3;
@@ -109,13 +109,14 @@ function init(canvas) {
     scatter[j + 1] = (rand() + rand() - 1) * 1.72;
     scatter[j + 2] = (rand() + rand() - 1) * 1.25;
 
-    // A restrained ivory / pale-gold palette, with brighter grains near the core.
+    // High-energy ivory points, warming to pale gold around the centre.
     const warmth = rand();
-    colors[j] = (0.88 + warmth * 0.12) * brightness;
-    colors[j + 1] = (0.82 + warmth * 0.14) * brightness;
-    colors[j + 2] = (0.68 + warmth * 0.22) * brightness;
+    const coreWhite = core ? 0.12 : 0;
+    colors[j] = (0.98 + warmth * 0.18) * brightness;
+    colors[j + 1] = (0.88 + warmth * 0.16 + coreWhite) * brightness;
+    colors[j + 2] = (0.72 + warmth * 0.2 + coreWhite * 1.1) * brightness;
 
-    sizes[i] = core && rand() < 0.12 ? 0.022 + rand() * 0.012 : 0.005 + rand() * 0.009;
+    sizes[i] = core && rand() < 0.16 ? 0.028 + rand() * 0.018 : 0.007 + rand() * 0.013;
     seeds[i] = rand();
   }
 
@@ -160,7 +161,7 @@ function init(canvas) {
     varying float vFade;
 
     void main() {
-      float spin = uTime * 0.012 + uScroll * 0.12;
+      float spin = uTime * 0.035 + uScroll * 0.16;
       float cs = cos(spin);
       float sn = sin(spin);
       vec2 turned = mat2(cs, -sn, sn, cs) * aGalaxy.xy;
@@ -178,7 +179,7 @@ function init(canvas) {
 
       vec4 viewPosition = modelViewMatrix * vec4(pointPosition, 1.0);
       gl_Position = projectionMatrix * viewPosition;
-      gl_PointSize = clamp(aSize * uPixelScale / max(1.0, -viewPosition.z), 1.0, 9.0);
+      gl_PointSize = clamp(aSize * uPixelScale / max(1.0, -viewPosition.z), 1.4, 12.0);
 
       vColor = aColor;
       vSeed = aSeed;
@@ -199,13 +200,15 @@ function init(canvas) {
     void main() {
       vec2 point = gl_PointCoord - vec2(0.5);
       float radius = length(point) * 2.0;
-      float edge = 1.0 - smoothstep(0.42, 1.0, radius);
-      if (edge <= 0.005) discard;
+      float disc = 1.0 - smoothstep(0.34, 0.84, radius);
+      float halo = exp(-radius * 3.2) * 0.42;
+      float alpha = max(disc, halo);
+      if (alpha <= 0.008) discard;
 
-      float twinkle = 0.82 + 0.18 * sin(uTime * (0.5 + vSeed * 2.4) + vSeed * 6.2831);
-      float core = 1.0 - smoothstep(0.0, 0.42, radius);
-      vec3 color = vColor * twinkle * (0.78 + core * 0.22);
-      gl_FragColor = vec4(color, edge * vFade * uAlpha * twinkle);
+      float twinkle = 0.88 + 0.22 * sin(uTime * (0.55 + vSeed * 2.8) + vSeed * 6.2831);
+      float hotCore = 1.0 - smoothstep(0.0, 0.42, radius);
+      vec3 color = vColor * twinkle * (1.0 + hotCore * 0.3);
+      gl_FragColor = vec4(color, alpha * vFade * uAlpha * twinkle);
     }
   `;
 
@@ -344,11 +347,13 @@ function init(canvas) {
     event.preventDefault();
     stop();
     canvas.classList.remove("is-ready");
+    document.body.classList.remove("has-webgl");
   });
 
   renderer.compile(scene, camera);
   draw(0.4);
   canvas.classList.add("is-ready");
+  document.body.classList.add("has-webgl");
   start();
 
   if (location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.protocol === "file:") {

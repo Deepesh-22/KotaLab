@@ -605,6 +605,7 @@ h1, h2, h3, h4, p, figure, blockquote { margin: 0; }
   animation: galaxyDrift 90s linear infinite;
 }
 @keyframes galaxyDrift { to { transform: rotate(360deg); } }
+.has-webgl .hero__fallback::after { opacity: 0; visibility: hidden; animation: none; }
 
 .hero__scrim {
   position: absolute;
