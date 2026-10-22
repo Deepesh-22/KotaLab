@@ -1,15 +1,13 @@
 /**
- * KotaLabs — hero-scene.js  (v4, persistent scene)
+ * KotaLabs — hero-scene.js
  *
- * A single WebGL layer that lives behind the entire page:
- *  - ~14k instanced pyramidal shards forming an organic two-lobed mass
- *  - a "sprinkle" field of glowing motes drifting around it
- *  - scroll drives everything: the mass opens out, drifts, and the palette
- *    grades from lime → teal → indigo → magenta → amber → lime
- *  - cursor creates a local dent in the mass
+ * A persistent Three.js particle galaxy behind the page:
+ *  - warm-white point particles form a layered spiral with a bright core
+ *  - scroll gradually loosens the spiral into a wide field of dust
+ *  - subtle rotation, twinkle and cursor repulsion keep the field alive
  *
- * Guards: no WebGL → canvas removed (CSS gradient stays). Context lost → stop.
- * Tab hidden → paused. prefers-reduced-motion → never loaded at all.
+ * No WebGL → the CSS galaxy fallback remains. Reduced-motion users never load
+ * this module; the tab-hidden render loop is paused.
  */
 
 import * as THREE from "../../vendor/three.module.min.js";
@@ -43,256 +41,177 @@ function init(canvas) {
   renderer.setClearColor(0x000000, 0);
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 120);
-  camera.position.set(0, 0, 5.6);
+  const fov = 38;
+  const camera = new THREE.PerspectiveCamera(fov, 1, 0.1, 120);
+  camera.position.set(0, 0, 6.2);
 
   const group = new THREE.Group();
   scene.add(group);
 
   /* ================================================================== */
-  /* 1. The mass                                                        */
+  /* 1. Spiral galaxy particles                                         */
   /* ================================================================== */
-  const COUNT = lowPower ? 4200 : smallScreen ? 6800 : 14000;
-
-  const hash = (x, y, z) => {
-    const s = Math.sin(x * 127.1 + y * 311.7 + z * 74.7) * 43758.5453;
-    return s - Math.floor(s);
-  };
-  const noise3 = (x, y, z) => {
-    const xi = Math.floor(x), yi = Math.floor(y), zi = Math.floor(z);
-    const xf = x - xi, yf = y - yi, zf = z - zi;
-    const u = xf * xf * (3 - 2 * xf);
-    const v = yf * yf * (3 - 2 * yf);
-    const w = zf * zf * (3 - 2 * zf);
-    const mix = (a, b, t) => a + (b - a) * t;
-    const c = (dx, dy, dz) => hash(xi + dx, yi + dy, zi + dz);
-    return mix(
-      mix(mix(c(0, 0, 0), c(1, 0, 0), u), mix(c(0, 1, 0), c(1, 1, 0), u), v),
-      mix(mix(c(0, 0, 1), c(1, 0, 1), u), mix(c(0, 1, 1), c(1, 1, 1), u), v),
-      w
-    );
-  };
-
-  const offsets = new Float32Array(COUNT * 3);
-  const quats = new Float32Array(COUNT * 4);
-  const scales = new Float32Array(COUNT);
+  const COUNT = lowPower ? 7600 : smallScreen ? 15000 : 32000;
+  const galaxy = new Float32Array(COUNT * 3);
+  const scatter = new Float32Array(COUNT * 3);
+  const colors = new Float32Array(COUNT * 3);
+  const sizes = new Float32Array(COUNT);
   const seeds = new Float32Array(COUNT);
 
-  const GOLDEN = Math.PI * (3 - Math.sqrt(5));
-  const q = new THREE.Quaternion();
-  const eul = new THREE.Euler();
-  const v3 = new THREE.Vector3();
+  const rand = Math.random;
+  const TAU = Math.PI * 2;
+  const ARM_COUNT = 3;
+  const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
 
   for (let i = 0; i < COUNT; i++) {
-    const t = (i + 0.5) / COUNT;
-    const y = 1 - t * 2;
-    const r = Math.sqrt(Math.max(0, 1 - y * y));
-    const phi = i * GOLDEN;
-    let x = Math.cos(phi) * r;
-    let z = Math.sin(phi) * r;
+    const core = rand() < 0.16;
+    const halo = !core && rand() < 0.055;
+    let x, y, z, brightness;
 
-    // clean fissure down the middle → reads as two lobes
-    const fissure = 0.11;
-    if (Math.abs(x) < fissure) x = Math.sign(x || 1) * fissure;
+    if (core) {
+      // Dense, gently glowing bulge at the centre of the disk.
+      const angle = rand() * TAU;
+      const radius = Math.sqrt(rand()) * 0.58;
+      x = Math.cos(angle) * radius;
+      y = Math.sin(angle) * radius * 0.62;
+      z = (rand() + rand() + rand() - 1.5) * 0.16;
+      brightness = 1.05 + rand() * 0.8;
+    } else if (halo) {
+      // A sparse, imperfect outer halo gives the spiral a dusty edge.
+      const angle = rand() * TAU;
+      const radius = 1.65 + rand() * 1.15;
+      x = Math.cos(angle) * radius;
+      y = Math.sin(angle) * radius * 0.56;
+      z = (rand() + rand() + rand() - 1.5) * 0.17;
+      brightness = 0.38 + rand() * 0.48;
+    } else {
+      // Three logarithmically winding arms, with soft width and radial grain.
+      const arm = Math.floor(rand() * ARM_COUNT);
+      const radius = 0.28 + Math.pow(rand(), 0.72) * 2.15;
+      const armAngle = (arm / ARM_COUNT) * TAU + radius * 2.65;
+      const spread = (rand() + rand() + rand() - 1.5) * (0.08 + radius * 0.045);
+      const angle = armAngle + spread;
+      const radialGrain = (rand() - 0.5) * (0.07 + radius * 0.04);
+      const r = radius + radialGrain;
+      x = Math.cos(angle) * r;
+      y = Math.sin(angle) * r * 0.58;
+      z = (rand() + rand() + rand() - 1.5) * (0.075 + radius * 0.025);
+      brightness = 0.78 + rand() * 0.86;
+    }
 
-    const n1 = noise3(x * 1.9 + 3.1, y * 1.9, z * 1.9);
-    const n2 = noise3(x * 4.7, y * 4.7 + 8.2, z * 4.7);
-    const radius = 1 + (n1 - 0.5) * 0.34 + (n2 - 0.5) * 0.1;
-    const inner = i % 5 === 0 ? 0.5 + Math.random() * 0.42 : 1 - Math.random() * 0.06;
+    const j = i * 3;
+    galaxy[j] = x;
+    galaxy[j + 1] = y;
+    galaxy[j + 2] = z;
 
-    v3.set(x * radius * inner, y * radius * inner * 0.92, z * radius * inner * 0.94);
+    // Full-screen normalized destinations; their world size tracks the viewport.
+    scatter[j] = (rand() + rand() - 1) * 1.72;
+    scatter[j + 1] = (rand() + rand() - 1) * 1.72;
+    scatter[j + 2] = (rand() + rand() - 1) * 1.25;
 
-    offsets[i * 3] = v3.x;
-    offsets[i * 3 + 1] = v3.y;
-    offsets[i * 3 + 2] = v3.z;
+    // High-energy ivory points, warming to pale gold around the centre.
+    const warmth = rand();
+    const coreWhite = core ? 0.12 : 0;
+    colors[j] = (0.98 + warmth * 0.18) * brightness;
+    colors[j + 1] = (0.88 + warmth * 0.16 + coreWhite) * brightness;
+    colors[j + 2] = (0.72 + warmth * 0.2 + coreWhite * 1.1) * brightness;
 
-    eul.set(Math.random() * Math.PI * 2, Math.random() * Math.PI * 2, Math.random() * Math.PI * 2);
-    q.setFromEuler(eul);
-    quats[i * 4] = q.x;
-    quats[i * 4 + 1] = q.y;
-    quats[i * 4 + 2] = q.z;
-    quats[i * 4 + 3] = q.w;
-
-    scales[i] = 0.019 + Math.random() * 0.042;
-    seeds[i] = Math.random();
+    sizes[i] = core && rand() < 0.16 ? 0.028 + rand() * 0.018 : 0.007 + rand() * 0.013;
+    seeds[i] = rand();
   }
 
-  const base = new THREE.ConeGeometry(0.62, 1.5, 4, 1, false);
-  base.deleteAttribute("uv");
-  const geometry = new THREE.InstancedBufferGeometry();
-  geometry.index = base.index;
-  geometry.setAttribute("position", base.getAttribute("position"));
-  geometry.setAttribute("normal", base.getAttribute("normal"));
-  geometry.instanceCount = COUNT;
-  geometry.setAttribute("aOffset", new THREE.InstancedBufferAttribute(offsets, 3));
-  geometry.setAttribute("aQuat", new THREE.InstancedBufferAttribute(quats, 4));
-  geometry.setAttribute("aScale", new THREE.InstancedBufferAttribute(scales, 1));
-  geometry.setAttribute("aSeed", new THREE.InstancedBufferAttribute(seeds, 1));
-  geometry.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 4);
+  const geometry = new THREE.BufferGeometry();
+  // Three's renderer uses `position` to determine the draw count for Points.
+  geometry.setAttribute("position", new THREE.BufferAttribute(galaxy, 3));
+  geometry.setAttribute("aGalaxy", new THREE.BufferAttribute(galaxy, 3));
+  geometry.setAttribute("aScatter", new THREE.BufferAttribute(scatter, 3));
+  geometry.setAttribute("aColor", new THREE.BufferAttribute(colors, 3));
+  geometry.setAttribute("aSize", new THREE.BufferAttribute(sizes, 1));
+  geometry.setAttribute("aSeed", new THREE.BufferAttribute(seeds, 1));
+  geometry.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 24);
 
-  /* ================================================================== */
-  /* 2. Sprinkle field — glowing motes around the mass                   */
-  /* ================================================================== */
-  const SPARKS = lowPower ? 260 : smallScreen ? 420 : 900;
-  const sparkPos = new Float32Array(SPARKS * 3);
-  const sparkCol = new Float32Array(SPARKS * 3);
-  const sparkSeed = new Float32Array(SPARKS);
-  const paletteStops = [
-    [0.788, 0.949, 0.302], // lime
-    [0.36, 0.95, 0.72], // teal
-    [0.42, 0.56, 1.0], // indigo
-    [0.79, 0.45, 1.0], // magenta
-    [1.0, 0.72, 0.34], // amber
-  ];
-  for (let i = 0; i < SPARKS; i++) {
-    const rad = 1.9 + Math.random() * 5.4;
-    const th = Math.random() * Math.PI * 2;
-    const ph = Math.acos(2 * Math.random() - 1);
-    sparkPos[i * 3] = rad * Math.sin(ph) * Math.cos(th);
-    sparkPos[i * 3 + 1] = rad * Math.sin(ph) * Math.sin(th) * 0.75;
-    sparkPos[i * 3 + 2] = rad * Math.cos(ph) * 0.8;
-
-    const c = paletteStops[i % paletteStops.length];
-    sparkCol[i * 3] = c[0];
-    sparkCol[i * 3 + 1] = c[1];
-    sparkCol[i * 3 + 2] = c[2];
-    sparkSeed[i] = Math.random();
-  }
-  const sparkGeo = new THREE.BufferGeometry();
-  sparkGeo.setAttribute("position", new THREE.BufferAttribute(sparkPos, 3));
-  sparkGeo.setAttribute("color", new THREE.BufferAttribute(sparkCol, 3));
-  const sparkMat = new THREE.PointsMaterial({
-    size: smallScreen ? 0.035 : 0.028,
-    vertexColors: true,
-    transparent: true,
-    opacity: 0.75,
-    depthWrite: false,
-    blending: THREE.AdditiveBlending,
-    sizeAttenuation: true,
-  });
-  const sparks = new THREE.Points(sparkGeo, sparkMat);
-  sparks.frustumCulled = false;
-  group.add(sparks);
-
-  /* ================================================================== */
-  /* 3. Shaders                                                         */
-  /* ================================================================== */
   const uniforms = {
     uTime: { value: 0 },
     uScroll: { value: 0 },
     uOpen: { value: 0 },
-    uPointer: { value: new THREE.Vector2(0, 0) },
-    uRepel: { value: new THREE.Vector3(0, 0, 1.2) },
-    uBg: { value: new THREE.Color(0x050506) },
+    uContentFade: { value: 0 },
+    uSpread: { value: new THREE.Vector2(1, 1) },
+    uPixelScale: { value: 1 },
+    uPointer: { value: new THREE.Vector3(20, 20, 0) },
+    uAlpha: { value: 1 },
   };
 
   const vertexShader = /* glsl */ `
     precision highp float;
 
-    attribute vec3 aOffset;
-    attribute vec4 aQuat;
-    attribute float aScale;
+    attribute vec3 aGalaxy;
+    attribute vec3 aScatter;
+    attribute vec3 aColor;
+    attribute float aSize;
     attribute float aSeed;
 
     uniform float uTime;
     uniform float uScroll;
     uniform float uOpen;
-    uniform vec2 uPointer;
-    uniform vec3 uRepel;
+    uniform float uContentFade;
+    uniform vec2 uSpread;
+    uniform float uPixelScale;
+    uniform vec3 uPointer;
 
-    varying vec3 vNormalW;
-    varying vec3 vViewPos;
+    varying vec3 vColor;
     varying float vSeed;
-    varying float vDepth;
-
-    vec3 rotateByQuat(vec3 v, vec4 q) {
-      return v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v);
-    }
+    varying float vFade;
 
     void main() {
+      float spin = uTime * 0.035 + uScroll * 0.16;
+      float cs = cos(spin);
+      float sn = sin(spin);
+      vec2 turned = mat2(cs, -sn, sn, cs) * aGalaxy.xy;
+      vec3 inGalaxy = vec3(turned, aGalaxy.z);
+      inGalaxy.z += sin(uTime * 0.55 + aSeed * 6.2831) * 0.012;
+
+      vec3 inScatter = vec3(aScatter.xy * uSpread, aScatter.z * 2.6);
+      vec3 pointPosition = mix(inGalaxy, inScatter, uOpen);
+
+      // A small, soft cursor wake. It fades as the galaxy disperses.
+      vec2 away = pointPosition.xy - uPointer.xy;
+      float distanceToPointer = length(away);
+      float wake = (1.0 - smoothstep(0.0, 0.86, distanceToPointer)) * (1.0 - uOpen * 0.55);
+      pointPosition.xy += normalize(away + vec2(0.0001)) * wake * 0.15;
+
+      vec4 viewPosition = modelViewMatrix * vec4(pointPosition, 1.0);
+      gl_Position = projectionMatrix * viewPosition;
+      gl_PointSize = clamp(aSize * uPixelScale / max(1.0, -viewPosition.z), 1.4, 12.0);
+
+      vColor = aColor;
       vSeed = aSeed;
-
-      float breathe = 1.0 + 0.045 * sin(uTime * 0.7 + aSeed * 6.2831);
-      vec3 offset = aOffset * breathe;
-
-      float swirl = uTime * 0.05 + uScroll * 1.6;
-      float cs = cos(swirl), sn = sin(swirl);
-      offset.xz = mat2(cs, -sn, sn, cs) * offset.xz;
-
-      // the form opens out as the page is scrolled
-      vec3 outward = normalize(aOffset + 0.0001);
-      offset += outward * uOpen * (0.6 + aSeed * 0.9);
-
-      // local dent around the cursor
-      vec3 toShard = offset - uRepel;
-      float dist = length(toShard);
-      float falloff = smoothstep(0.9, 0.0, dist);
-      offset += normalize(toShard + 0.0001) * falloff * 0.42 * (0.4 + aSeed);
-
-      vec3 transformed = rotateByQuat(position * aScale, aQuat);
-      vec3 nrm = rotateByQuat(normal, aQuat);
-
-      vec4 world = modelMatrix * vec4(offset + transformed, 1.0);
-      vNormalW = normalize(mat3(modelMatrix) * nrm);
-
-      vec4 view = viewMatrix * world;
-      vViewPos = view.xyz;
-      vDepth = -view.z;
-
-      gl_Position = projectionMatrix * view;
+      // Keep the scene vivid in the hero and soften it behind reading content.
+      vFade = mix(1.0, 0.36, uContentFade);
     }
   `;
 
   const fragmentShader = /* glsl */ `
     precision highp float;
 
-    uniform float uScroll;
     uniform float uTime;
-    uniform vec3 uBg;
+    uniform float uAlpha;
 
-    varying vec3 vNormalW;
-    varying vec3 vViewPos;
+    varying vec3 vColor;
     varying float vSeed;
-    varying float vDepth;
-
-    // colour grade: lime → teal → indigo → magenta → amber → lime
-    vec3 palette(float t) {
-      vec3 c0 = vec3(0.788, 0.949, 0.302);
-      vec3 c1 = vec3(0.360, 0.950, 0.720);
-      vec3 c2 = vec3(0.420, 0.560, 1.000);
-      vec3 c3 = vec3(0.790, 0.450, 1.000);
-      vec3 c4 = vec3(1.000, 0.720, 0.340);
-
-      t = fract(t);
-      if (t < 0.2) return mix(c0, c1, smoothstep(0.0, 0.2, t));
-      if (t < 0.4) return mix(c1, c2, smoothstep(0.2, 0.4, t));
-      if (t < 0.6) return mix(c2, c3, smoothstep(0.4, 0.6, t));
-      if (t < 0.8) return mix(c3, c4, smoothstep(0.6, 0.8, t));
-      return mix(c4, c0, smoothstep(0.8, 1.0, t));
-    }
+    varying float vFade;
 
     void main() {
-      vec3 n = normalize(vNormalW);
-      vec3 viewDir = normalize(-vViewPos);
+      vec2 point = gl_PointCoord - vec2(0.5);
+      float radius = length(point) * 2.0;
+      float disc = 1.0 - smoothstep(0.34, 0.84, radius);
+      float halo = exp(-radius * 3.2) * 0.42;
+      float alpha = max(disc, halo);
+      if (alpha <= 0.008) discard;
 
-      vec3 key = normalize(vec3(0.55, 0.8, 0.6));
-      vec3 fill = normalize(vec3(-0.7, -0.15, 0.5));
-      float kd = max(dot(n, key), 0.0);
-      float fd = max(dot(n, fill), 0.0);
-      float rim = pow(1.0 - max(dot(n, viewDir), 0.0), 2.2);
-
-      vec3 cool = palette(uScroll + 0.42);
-      vec3 warm = palette(uScroll);
-      vec3 baseCol = mix(cool, warm, smoothstep(0.42, 1.0, vSeed));
-
-      vec3 color = baseCol * (0.07 + kd * 0.74 + fd * 0.22);
-      color += palette(uScroll + 0.12) * rim * (0.18 + vSeed * 0.5);
-
-      // depth fade to the page background
-      float fog = smoothstep(10.5, 4.4, vDepth);
-      color = mix(uBg, color, fog * 0.96 + 0.04);
-
-      gl_FragColor = vec4(color, 1.0);
+      float twinkle = 0.88 + 0.22 * sin(uTime * (0.55 + vSeed * 2.8) + vSeed * 6.2831);
+      float hotCore = 1.0 - smoothstep(0.0, 0.42, radius);
+      vec3 color = vColor * twinkle * (1.0 + hotCore * 0.3);
+      gl_FragColor = vec4(color, alpha * vFade * uAlpha * twinkle);
     }
   `;
 
@@ -300,50 +219,54 @@ function init(canvas) {
     uniforms,
     vertexShader,
     fragmentShader,
-    side: THREE.FrontSide,
-    transparent: false,
-    depthWrite: true,
+    transparent: true,
+    depthWrite: false,
     depthTest: true,
+    blending: THREE.AdditiveBlending,
   });
 
-  const mesh = new THREE.Mesh(geometry, material);
-  mesh.frustumCulled = false;
-  group.add(mesh);
+  const points = new THREE.Points(geometry, material);
+  points.frustumCulled = false;
+  group.add(points);
 
   /* ================================================================== */
-  /* 4. Layout — the canvas is fixed behind the whole page               */
+  /* 2. Layout                                                           */
   /* ================================================================== */
+  const halfFov = THREE.MathUtils.degToRad(fov * 0.5);
   const layout = () => {
     const w = window.innerWidth;
     const h = window.innerHeight;
     const mobile = w < 860;
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, mobile ? 1.5 : 1.8);
 
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, mobile ? 1.6 : 2));
+    renderer.setPixelRatio(pixelRatio);
     renderer.setSize(w, h, false);
 
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
+    uniforms.uSpread.value.set(
+      camera.position.z * Math.tan(halfFov) * camera.aspect * 0.94,
+      camera.position.z * Math.tan(halfFov) * 0.94
+    );
+    uniforms.uPixelScale.value = (h * pixelRatio) / (2 * Math.tan(halfFov));
+
     group.userData.mobile = mobile;
     group.userData.shift = mobile ? 0 : Math.min(w / h, 1.85) * 0.78;
   };
   layout();
 
   /* ================================================================== */
-  /* 5. Input                                                           */
+  /* 3. Pointer + scroll                                                 */
   /* ================================================================== */
   const pointer = { x: 0, y: 0 };
   const smooth = { x: 0, y: 0 };
-  let pageProgress = 0;
   let targetProgress = 0;
+  let pageProgress = 0;
 
-  window.addEventListener(
-    "pointermove",
-    (e) => {
-      pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
-      pointer.y = (e.clientY / window.innerHeight) * 2 - 1;
-    },
-    { passive: true }
-  );
+  window.addEventListener("pointermove", (event) => {
+    pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+    pointer.y = (event.clientY / window.innerHeight) * 2 - 1;
+  }, { passive: true });
 
   const readScroll = () => {
     const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
@@ -352,66 +275,52 @@ function init(canvas) {
   window.addEventListener("scroll", readScroll, { passive: true });
   readScroll();
 
-  // Nudge CSS so the page background grades along with the scene.
-  const root = document.documentElement;
-  const applyCssGrade = (p) => {
-    root.style.setProperty("--grade", p.toFixed(4));
-    // hue rotates 0 → 150deg across the page, then eases back
-    const hue = Math.sin(p * Math.PI) * 78;
-    root.style.setProperty("--grade-hue", hue.toFixed(1) + "deg");
-  };
-
   /* ================================================================== */
-  /* 6. Loop                                                            */
+  /* 4. Animation                                                        */
   /* ================================================================== */
   const clock = new THREE.Clock();
   let rafId = null;
   let visible = true;
 
-  const easeInOut = (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+  const smoothstep = (edge0, edge1, value) => {
+    const t = Math.max(0, Math.min(1, (value - edge0) / (edge1 - edge0)));
+    return t * t * (3 - 2 * t);
+  };
 
-  function draw(t) {
-    pageProgress += (targetProgress - pageProgress) * 0.06;
+  function draw(time) {
+    pageProgress += (targetProgress - pageProgress) * 0.055;
+    smooth.x += (pointer.x - smooth.x) * 0.045;
+    smooth.y += (pointer.y - smooth.y) * 0.045;
+
     const p = pageProgress;
-
-    smooth.x += (pointer.x - smooth.x) * 0.05;
-    smooth.y += (pointer.y - smooth.y) * 0.05;
-
-    uniforms.uTime.value = t;
-    uniforms.uScroll.value = p;
-    uniforms.uOpen.value = easeInOut(p) * 0.85;
-
-    uniforms.uRepel.value.set(smooth.x * 2.2, -smooth.y * 1.6, 1.2);
-
+    const open = smoothstep(0.015, 0.72, p);
+    const contentFade = smoothstep(0.035, 0.24, p);
     const mobile = group.userData.mobile;
     const shift = group.userData.shift || 0;
 
-    // Hero: the mass sits right of the copy.
-    // Deeper in the page: it rises out of the way, shrinks back and fades, so it
-    // becomes an ambient sprinkle around the content — never on top of the copy.
-    const heroWeight = Math.max(0, 1 - p * 3.4);
-    const settle = Math.min(1, Math.max(0, (p - 0.02) / 0.26)); // 0 → 1 over the first quarter page
+    uniforms.uTime.value = time;
+    uniforms.uScroll.value = p;
+    uniforms.uOpen.value = open;
+    uniforms.uContentFade.value = contentFade;
+    uniforms.uAlpha.value = 1.0;
 
-    group.position.x = mobile ? 0 : shift * (0.18 + heroWeight * 0.82);
-    group.position.y = (mobile ? 0.75 : 0.1) + settle * (mobile ? 2.4 : 2.9);
-    group.scale.setScalar((mobile ? 0.9 : 1.0) * (1 - settle * 0.26));
+    group.position.x = mobile ? 0 : shift * (1.0 - open * 0.78);
+    group.position.y = (mobile ? 0.48 : 0.08) + open * 0.08;
+    group.rotation.x = 0.11 + smooth.y * 0.055;
+    group.rotation.y = smooth.x * 0.07;
+    group.rotation.z = Math.sin(time * 0.055) * 0.012 + p * 0.035;
 
-    group.rotation.y = t * 0.09 + smooth.x * 0.32 + p * 0.9;
-    group.rotation.x = Math.sin(t * 0.2) * 0.06 + smooth.y * 0.16;
-    group.rotation.z = Math.sin(t * 0.13) * 0.03 + p * 0.2;
+    const viewHalfHeight = camera.position.z * Math.tan(halfFov);
+    const viewHalfWidth = viewHalfHeight * camera.aspect;
+    uniforms.uPointer.value.set(
+      smooth.x * viewHalfWidth - group.position.x,
+      -smooth.y * viewHalfHeight - group.position.y,
+      0
+    );
 
-    sparks.rotation.y = -t * 0.03 + p * 0.8;
-    sparks.rotation.x = Math.sin(t * 0.1) * 0.06;
-    sparkMat.opacity = 0.72 * (1 - settle * 0.25);
-
-    camera.position.z = 5.6 + settle * 1.1;
-    camera.lookAt(0, 0, 0);
-
-    // Readability first: full strength in the hero, ~0.3 through the content.
-    const fade = 1 - settle * 0.72;
-    canvas.style.opacity = String(fade);
-
-    applyCssGrade(p);
+    // Keep the hero crisp; the scattered field remains visible, but lighter,
+    // while the rest of the page scrolls over it.
+    canvas.style.opacity = String(1.0 - contentFade * 0.32);
     renderer.render(scene, camera);
   }
 
@@ -439,21 +348,20 @@ function init(canvas) {
     resizeTimer = setTimeout(layout, 120);
   });
 
-  canvas.addEventListener("webglcontextlost", (e) => {
-    e.preventDefault();
+  canvas.addEventListener("webglcontextlost", (event) => {
+    event.preventDefault();
     stop();
     canvas.classList.remove("is-ready");
+    document.body.classList.remove("has-webgl");
   });
 
-  /* ================================================================== */
-  /* 7. Go                                                              */
-  /* ================================================================== */
   renderer.compile(scene, camera);
   draw(0.4);
   canvas.classList.add("is-ready");
+  document.body.classList.add("has-webgl");
   start();
 
   if (location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.protocol === "file:") {
-    window.__kotelabsHero = { scene, camera, renderer, group, sparks, uniforms, count: COUNT, sparksCount: SPARKS };
+    window.__kotelabsHero = { scene, camera, renderer, group, points, uniforms, count: COUNT };
   }
 }
