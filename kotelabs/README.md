@@ -4,7 +4,7 @@ A production-ready, hand-coded marketing site for a web-design studio in Kota, R
 No build step, no npm install, no framework. Upload the folder and it runs.
 
 - **Live pages:** `index.html` (home), `work.html` (empty-state work page), `404.html`
-- **3D:** one persistent Three.js + GLSL layer behind the *whole page* — ~14,000 instanced pyramidal shards forming an organic two-lobed mass, a field of glowing "sprinkle" motes, cursor repulsion, and a **scroll-driven colour grade** (lime → teal → indigo → magenta → amber). Loaded lazily; never downloaded for reduced-motion or low-power devices
+- **3D:** one persistent Three.js + GLSL layer behind the *whole page* — a warm-white spiral galaxy made from tiny circular particles, with a bright core, gentle twinkle, cursor wake, and a **scroll-driven dispersion** that opens the spiral into a screen-wide dust field. Uses 32,000 particles on desktop, 15,000 on mobile, and 7,600 on low-power devices. Loaded lazily; never downloaded for reduced-motion users.
 - **Type:** Geist + Geist Mono (display / labels) and Inter (body), all self-hosted
 - **Animation:** counting preloader, masked line reveals, a pinned word-by-word manifesto, scroll progress bar, scroll colour grading, sticky process rail, counters, marquee, accordions, magnetic buttons, and a gradient footer wordmark with a wipe + travelling sheen — all hand-written, no GSAP / no Lenis, ~34 KB of JS total
 - **Contacts:** WhatsApp deep links (with pre-filled messages) for both founders + click-to-call + a form that opens WhatsApp with the details already written
@@ -34,7 +34,7 @@ ES modules and the `THREE` import need `http://`, not `file://`.
 | **GitHub Pages** | Push, then Settings → Pages → deploy from branch root. |
 | **cPanel / Hostinger** | Upload the folder contents to `public_html`. |
 
-Then point the domain (`kotelabs.com` — buy from GoDaddy/Namecheap/Hostinger, ₹800–1,200/year) at the host.
+The current site URL is `https://kotalabs.vercel.app/`. Add a custom domain only if you own one, then update the canonical and social metadata to match.
 
 **Pushing to GitHub for the first time**
 
@@ -87,9 +87,7 @@ If you change a price, update three things: the `<s>` regular price, the `.plan_
 **The offer strip** (the lime banner above the plans) and the hero pill are in `index.html` — search for `offer-strip` and `hero__offer`. The line *"Offer ends when the three slots are filled"* is the honest reason for the discount; keep it tied to something real (slots filling, or a date you actually honour).
 
 **Colours / type:** `assets/css/styles.css` → `:root`. The accent is `--lime: #c9f24d`.
-The scroll palette lives in `palette()` inside `assets/js/hero-scene.js` — five vec3 stops, in this order:
-lime `(0.788, 0.949, 0.302)` → teal `(0.36, 0.95, 0.72)` → indigo `(0.42, 0.56, 1.0)` → magenta `(0.79, 0.45, 1.0)` → amber `(1.0, 0.72, 0.34)`.
-Change those five and the whole page re-grades. The CSS fallback wash (`.grade`) uses the same colours in `rgba()`.
+The galaxy particle palette and spiral layout are generated in `assets/js/hero-scene.js`; adjust the `colors` values and arm-generation block to tune its warmth and density. Scroll dispersion is driven by `uOpen` and the normalized `aScatter` destinations. The page's separate CSS background wash (`.grade`) still grades with scroll.
 
 ## 4. When you get your first project
 
@@ -118,7 +116,7 @@ numbers beats ten screenshots.**
 
 ## 5. Before you go live — small checklist
 
-- [ ] Replace `https://kotelabs.com/` in the `<link rel="canonical">`, `og:url`, `sitemap.xml` and `robots.txt` with your real domain.
+- [ ] Verify the canonical URL, Open Graph URL, `sitemap.xml` and `robots.txt` use `https://kotalabs.vercel.app/` (or your custom domain if configured).
 - [ ] Create `hello@kotelabs.com` (or change the mailto).
 - [ ] Add Google Analytics 4 or Plausible — one `<script>` before `</body>`.
 - [ ] Claim the **Google Business Profile** for "KotaLabs, Kota" (this drives local calls more than the site does).
@@ -139,7 +137,7 @@ kotelabs/
 ├── assets/
 │   ├── css/styles.css    # single stylesheet, tokens at the top
 │   ├── js/app.js         # UI: loader, menu, line reveals, manifesto, form → WhatsApp
-│   ├── js/hero-scene.js  # persistent Three.js + GLSL layer (shards + sparks + grading)
+│   ├── js/hero-scene.js  # persistent Three.js + GLSL particle galaxy
 │   ├── fonts/            # self-hosted Geist, Geist Mono, Inter (no Google Fonts request)
 │   ├── img/og.jpg        # 1200×630 social preview
 │   ├── img/vansh.jpg     # founder portrait, 560×560 square (card)
@@ -160,7 +158,7 @@ kotelabs/
 | `404.html` | Static 404, no JS | — |
 | `assets/css/styles.css` | One stylesheet. Header block maps the sections; `:root` holds every colour and spacing token | `:root` tokens, then `.plan__price`, `.footer__wordmark` |
 | `assets/js/app.js` | All UI behaviour, numbered §1–§14 (config, preloader, menu, reveals, manifesto, counters, accordions, form, lazy 3D loader) | `SITE` config at the top, §12b for the scroll colour grade |
-| `assets/js/hero-scene.js` | The Three.js + GLSL layer: shards, sprinkle motes, palette, scroll settle | `PALETTE`, `updateScroll()` |
+| `assets/js/hero-scene.js` | The Three.js + GLSL layer: spiral particle galaxy, cursor wake, scroll dispersion | particle count / arm layout, `uOpen` |
 | `vercel.json` | Static hosting config (long cache for fonts/vendor, revalidate for CSS/JS, security headers) | — |
 
 There is no build step: what you edit is what ships. Comments are deliberately short — the code is meant to be read, not decoded.
@@ -171,9 +169,9 @@ There is no build step: what you edit is what ships. Comments are deliberately s
 |---|---|---|
 | Pre-loader | Counts 0→100 with status words, hard-capped at 3.2s, fades into the hero | `app.js` §2, `.loader` in CSS |
 | Hero headline | Three lines wipe up from a mask, staggered | `.line > span`, `startHero()` |
-| Hero 3D | 14k shards, cursor repulsion, drift, opens out as you scroll | `hero-scene.js` |
-| Manifesto | Section pins for 260vh; each word lights up as you scroll; live word counter | `app.js` §6, `.manifesto` in CSS |
-| **Colour grade** | The fixed WebGL mass grades lime → teal → indigo → magenta → amber with scroll; the CSS `.grade` wash rotates hue alongside it (so the grade survives even without WebGL) | `palette()` in `hero-scene.js`, `--grade` / `--grade-hue` in CSS |
+| Hero 3D | Warm-white spiral galaxy of circular points; twinkles, responds to cursor and disperses as you scroll | `hero-scene.js` |
+| Manifesto | Section pins for 260vh; each word lights up as you scroll | `app.js` §6, `.manifesto` in CSS |
+| **Colour grade** | A separate CSS `.grade` wash shifts hue with scroll; the galaxy keeps its warm-white particle palette | `--grade` / `--grade-hue` in CSS |
 | **Section tints** | Each section has its own subtle radial tint, cards are tinted glass | `#services` … `#contact` blocks in CSS |
 | **Footer wordmark** | Same size, now a live spectrum: clip-wipe reveal left→right, flowing gradient, travelling white sheen | `.footer__wordmark` in CSS + `app.js` §12b |
 | Section headings | Masked line reveals on scroll | `[data-lines]` + `.line` |
@@ -184,11 +182,11 @@ There is no build step: what you edit is what ships. Comments are deliberately s
 
 | Situation | Behaviour |
 |---|---|
-| Desktop, normal | Chrome knot + dust, cursor parallax, drifts up as you scroll |
-| Phone / tablet | Same scene, centred, DPR clamped to 1.6, 6.8k shards (4.2k on low-power) |
-| Scrolling past the hero | The mass rises out of the way, shrinks to 74% and fades to ~28% so it frames the content instead of covering it |
-| `prefers-reduced-motion: reduce` | Three.js is never downloaded; CSS gradient hero instead |
-| No WebGL / context lost | Canvas removed, CSS gradient hero stays |
+| Desktop, normal | A warm-white spiral galaxy of tiny dots, with a bright core, soft twinkle and a subtle cursor wake |
+| Phone / tablet | Same scene, centred, DPR clamped to 1.5, 15k particles (7.6k on low-power) |
+| Scrolling down the page | The spiral gradually loosens into a screen-wide field of particles; the dust stays subtle behind content |
+| `prefers-reduced-motion: reduce` | Three.js is never downloaded; the static CSS galaxy fallback is shown |
+| No WebGL / context lost | The canvas is removed and the CSS galaxy fallback remains |
 | Off-screen or tab hidden | Render loop stops (no battery drain) |
 | Slow connection | The script is fetched only when the hero enters the viewport |
 
@@ -199,11 +197,12 @@ Vansh's portrait is wired in at two sizes, both cropped from one square master:
 | File | Size | Used for |
 |---|---|---|
 | `assets/img/vansh.jpg` | 560×560 | Founder card (rendered at 88px desktop / 76px mobile, circle-masked) |
-| `assets/img/vansh-sm.jpg` | 160×160 | The 32px avatar chip in the hero |
+| `assets/img/vansh-sm.jpg` | 160×160 | Vansh’s 32px hero avatar |
+| `assets/img/deepesh.jpg` | 560×560 | Deepesh’s founder card portrait |
 
 The crop is deliberately **face-first**: hair touches the top of the circle, chin sits at ~80%, ears just inside the edge — so the face fills the avatar instead of floating in it. The head is nudged ~5% right of the frame centre to compensate for head tilt.
 
-To swap or add a photo (e.g. Deepesh later):
+To replace either founder portrait:
 
 1. Crop the photo **square, roughly 560×560**, tight on the head: hair just inside the top edge, chin near the bottom, ears at the sides. That is what the circle mask frames.
 2. Export two JPEGs at quality 88: `560×560` (card) and `160×160` (hero chip), with a light `UnsharpMask` before saving so the downscale stays crisp.
@@ -212,13 +211,11 @@ To swap or add a photo (e.g. Deepesh later):
 ```html
 <span class="founder__photo">
   <img src="assets/img/deepesh.jpg" width="560" height="560"
-       alt="Deepeesh Chauhan, co-founder of KotaLabs" decoding="async">
+       alt="Deepesh Chauhan, founder of KotaLabs" decoding="async">
 </span>
 ```
 
-…replacing his `<span class="avatar">DC</span>` initials. The CSS needs no changes — `.founder__photo` handles the crop, circle mask, ring, hover zoom and the inner shadow.
-
-**Note on the current photo:** the original has an AI watermark in the top-right corner. The square crop starts below it, so it is not in the shipped files — but if you re-crop from the original, keep `top ≥ 150px`.
+Use the same `.founder__photo` pattern for either founder. The CSS needs no changes — it handles the crop, circle mask, ring, hover zoom and inner shadow.
 
 ## 10. Honest to-do list for the copy
 
