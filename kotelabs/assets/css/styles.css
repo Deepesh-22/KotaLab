@@ -590,18 +590,21 @@ h1, h2, h3, h4, p, figure, blockquote { margin: 0; }
 .hero__fallback::after {
   content: "";
   position: absolute;
-  right: 8%;
-  top: 14%;
-  width: min(52vw, 620px);
-  aspect-ratio: 1;
+  right: 2%;
+  top: 10%;
+  width: min(64vw, 780px);
+  aspect-ratio: 1.55;
   border-radius: 50%;
-  background: conic-gradient(from 180deg, #38401d, #c9f24d, #14170c, #9fc22f, #38401d);
-  opacity: 0.4;
-  filter: blur(1px);
-  mask-image: radial-gradient(circle at 42% 38%, #000 42%, transparent 70%);
-  animation: orbSpin 30s linear infinite;
+  background:
+    radial-gradient(circle, rgba(255, 245, 219, 0.58) 0 1px, transparent 1.7px) 0 0 / 18px 18px,
+    radial-gradient(ellipse at center, rgba(255, 238, 196, 0.2), transparent 55%),
+    repeating-radial-gradient(ellipse at center, transparent 0 18px, rgba(255, 244, 218, 0.13) 19px 20px, transparent 21px 37px);
+  opacity: 0.32;
+  filter: blur(0.35px);
+  mask-image: radial-gradient(ellipse at center, #000 36%, transparent 74%);
+  animation: galaxyDrift 90s linear infinite;
 }
-@keyframes orbSpin { to { transform: rotate(360deg); } }
+@keyframes galaxyDrift { to { transform: rotate(360deg); } }
 
 .hero__scrim {
   position: absolute;

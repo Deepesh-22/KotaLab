@@ -73,7 +73,7 @@
 
     const statuses = [
       [0, "Preparing the scene"],
-      [25, "Building the shards"],
+      [25, "Mapping the galaxy"],
       [55, "Loading type"],
       [80, "Almost there"],
       [96, "Welcome"],
