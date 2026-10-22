@@ -186,6 +186,7 @@ h1, h2, h3, h4, p, figure, blockquote { margin: 0; }
   .section__head { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); align-items: end; }
   .section__head > p { justify-self: end; text-align: right; }
 }
+.section__head--single { grid-template-columns: 1fr; }
 .section__head .eyebrow { margin-bottom: 1.1rem; }
 
 /* ==========================================================================
