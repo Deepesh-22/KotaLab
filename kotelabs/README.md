@@ -197,11 +197,12 @@ Vansh's portrait is wired in at two sizes, both cropped from one square master:
 | File | Size | Used for |
 |---|---|---|
 | `assets/img/vansh.jpg` | 560×560 | Founder card (rendered at 88px desktop / 76px mobile, circle-masked) |
-| `assets/img/vansh-sm.jpg` | 160×160 | The 32px avatar chip in the hero |
+| `assets/img/vansh-sm.jpg` | 160×160 | Vansh’s 32px hero avatar |
+| `assets/img/deepesh.jpg` | 560×560 | Deepesh’s founder card portrait |
 
 The crop is deliberately **face-first**: hair touches the top of the circle, chin sits at ~80%, ears just inside the edge — so the face fills the avatar instead of floating in it. The head is nudged ~5% right of the frame centre to compensate for head tilt.
 
-To swap or add a photo (e.g. Deepesh later):
+To replace either founder portrait:
 
 1. Crop the photo **square, roughly 560×560**, tight on the head: hair just inside the top edge, chin near the bottom, ears at the sides. That is what the circle mask frames.
 2. Export two JPEGs at quality 88: `560×560` (card) and `160×160` (hero chip), with a light `UnsharpMask` before saving so the downscale stays crisp.
@@ -210,13 +211,11 @@ To swap or add a photo (e.g. Deepesh later):
 ```html
 <span class="founder__photo">
   <img src="assets/img/deepesh.jpg" width="560" height="560"
-       alt="Deepeesh Chauhan, founder of KotaLabs" decoding="async">
+       alt="Deepesh Chauhan, founder of KotaLabs" decoding="async">
 </span>
 ```
 
-…replacing his `<span class="avatar">DC</span>` initials. The CSS needs no changes — `.founder__photo` handles the crop, circle mask, ring, hover zoom and the inner shadow.
-
-**Note on the current photo:** the original has an AI watermark in the top-right corner. The square crop starts below it, so it is not in the shipped files — but if you re-crop from the original, keep `top ≥ 150px`.
+Use the same `.founder__photo` pattern for either founder. The CSS needs no changes — it handles the crop, circle mask, ring, hover zoom and inner shadow.
 
 ## 10. Honest to-do list for the copy
 
