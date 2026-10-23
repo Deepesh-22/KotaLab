@@ -10,14 +10,15 @@
  *   4. full-screen menu
  *   5. line-mask reveals  (hero on load, sections on scroll)
  *   6. manifesto (word-by-word illumination while pinned)
- *   7. counters
- *   8. marquee
- *  9. accordions (pricing inclusions)
- *  10. magnetic buttons
- *  11. mouse-follow tilt on project and pricing cards
- *  12. contact form → WhatsApp
- *  13. misc (year stamps)
- *  14. lazy Three.js hero
+ *   7. process rail
+ *   8. counters
+ *   9. marquee
+ *  10. accordions (pricing inclusions)
+ *  11. magnetic buttons
+ *  12. mouse-follow tilt on project and pricing cards
+ *  13. contact form → WhatsApp
+ *  14. misc (year stamps)
+ *  15. lazy Three.js hero
  */
 
 (function () {
@@ -260,7 +261,27 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* 7. Counters                                                         */
+  /* 7. Process rail                                                     */
+  /* ------------------------------------------------------------------ */
+  const steps = document.querySelectorAll(".process__step");
+  if (steps.length && "IntersectionObserver" in window && !reduceMotion) {
+    const stepIO = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          steps.forEach((s) => s.classList.remove("is-active"));
+          entry.target.classList.add("is-active");
+        });
+      },
+      { rootMargin: "-42% 0px -48% 0px" }
+    );
+    steps.forEach((s) => stepIO.observe(s));
+  } else {
+    steps.forEach((s) => s.classList.add("is-active"));
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* 8. Counters                                                         */
   /* ------------------------------------------------------------------ */
   const counters = document.querySelectorAll("[data-count]");
   if (counters.length && "IntersectionObserver" in window && !reduceMotion) {
@@ -290,7 +311,7 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* 8. Marquee (duplicate the group for a seamless loop)                */
+  /* 9. Marquee (duplicate the group for a seamless loop)                */
   /* ------------------------------------------------------------------ */
   document.querySelectorAll(".marquee__track").forEach((track) => {
     const group = track.querySelector(".marquee__group");
@@ -301,7 +322,7 @@
   });
 
   /* ------------------------------------------------------------------ */
-  /* 9. Accordions                                                      */
+  /* 10. Accordions                                                      */
   /* ------------------------------------------------------------------ */
   document.querySelectorAll(".acc").forEach((acc) => {
     const btn = acc.querySelector(".acc__btn");
@@ -321,7 +342,7 @@
   });
 
   /* ------------------------------------------------------------------ */
-  /* 10. Magnetic buttons                                                */
+  /* 11. Magnetic buttons                                                */
   /* ------------------------------------------------------------------ */
   if (finePointer && !reduceMotion) {
     document.querySelectorAll(".btn, .wa-fab").forEach((el) => {
@@ -338,7 +359,7 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* 11. Mouse-follow tilt for project and pricing cards                 */
+  /* 12. Mouse-follow tilt for project and pricing cards                 */
   /* ------------------------------------------------------------------ */
   if (finePointer && !reduceMotion) {
     document.querySelectorAll(".project-card, .plan").forEach((card) => {
@@ -380,7 +401,7 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* 12. Contact form → WhatsApp                                         */
+  /* 13. Contact form → WhatsApp                                         */
   /* ------------------------------------------------------------------ */
   const form = document.getElementById("project-form");
   if (form) {
@@ -454,14 +475,14 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* 13. Year stamps                                                     */
+  /* 14. Year stamps                                                     */
   /* ------------------------------------------------------------------ */
   document.querySelectorAll("[data-year]").forEach((el) => {
     el.textContent = String(new Date().getFullYear());
   });
 
   /* ------------------------------------------------------------------ */
-  /* 14. Lazy Three.js hero                                              */
+  /* 15. Lazy Three.js hero                                              */
   /* ------------------------------------------------------------------ */
   const heroCanvas = document.getElementById("scene");
   if (heroCanvas && !reduceMotion) {
