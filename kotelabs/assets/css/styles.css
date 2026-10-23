@@ -1399,18 +1399,51 @@ h1, h2, h3, h4, p, figure, blockquote { margin: 0; }
    ========================================================================== */
 .founders { display: grid; gap: 1rem; grid-template-columns: 1fr; }
 @media (min-width: 760px) { .founders { grid-template-columns: repeat(2, 1fr); } }
+@property --founder-border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+@keyframes founder-border-orbit {
+  to { --founder-border-angle: 360deg; }
+}
 .founder {
   position: relative;
+  isolation: isolate;
   display: grid;
   gap: 1.4rem;
   padding: clamp(1.4rem, 2.8vw, 2.1rem);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--ink-2);
-  transition: border-color 0.4s ease, transform 0.6s var(--ease);
+  transition: border-color 0.4s ease, transform 0.6s var(--ease), box-shadow 0.4s ease;
   overflow: hidden;
 }
-.founder:hover { border-color: rgba(201, 242, 77, 0.36); transform: translateY(-3px); }
+.founder::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: conic-gradient(from var(--founder-border-angle), transparent 0deg 245deg, rgba(201, 242, 77, 0.15) 276deg, rgba(201, 242, 77, 0.82) 320deg, #efffb4 334deg, rgba(201, 242, 77, 0.12) 350deg, transparent 360deg);
+  opacity: 0;
+  pointer-events: none;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  transition: opacity 0.3s ease;
+}
+.founder > * { position: relative; z-index: 1; }
+.founder:hover, .founder:focus-within {
+  border-color: rgba(201, 242, 77, 0.5);
+  box-shadow: 0 0 24px rgba(201, 242, 77, 0.08);
+  transform: translateY(-3px);
+}
+.founder:hover::before, .founder:focus-within::before {
+  opacity: 1;
+  animation: founder-border-orbit 3s linear infinite;
+}
 .founder__head { display: flex; align-items: center; gap: 1rem; }
 
 /* Real photo, cropped square and masked to a circle so both founder cards
@@ -1975,7 +2008,8 @@ h1, h2, h3, h4, p, figure, blockquote { margin: 0; }
   .stat:hover { transform: none !important; }
   .hero__fallback::after { animation: none; }
   .loader { display: none; }
-  .project-card:hover, .project-card:nth-child(even):hover, .project-card:hover .project-browser, .project-card__visual:hover .project-card__visit, .plan:hover { transform: none !important; }
+  .project-card:hover, .project-card:nth-child(even):hover, .project-card:hover .project-browser, .project-card__visual:hover .project-card__visit, .plan:hover, .founder:hover, .founder:focus-within { transform: none !important; }
+  .founder::before { animation: none !important; }
 }
 
 /* ---------- Print ---------- */
