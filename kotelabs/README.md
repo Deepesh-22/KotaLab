@@ -3,12 +3,12 @@
 A production-ready, hand-coded marketing site for a web-design studio in Kota, Rajasthan.
 No build step, no npm install, no framework. Upload the folder and it runs.
 
-- **Live pages:** `index.html` (home), `work.html` (empty-state work page), `404.html`
+- **Pages:** `index.html` (home), `work.html` (empty-state work page), `404.html`, and `hamburger-demo.html` (interactive component demo)
 - **3D:** one persistent Three.js + GLSL layer behind the *whole page* — a warm-white spiral galaxy made from tiny circular particles, with a bright core, gentle twinkle, cursor wake, and a **scroll-driven dispersion** that opens the spiral into a screen-wide dust field. Uses 32,000 particles on desktop, 15,000 on mobile, and 7,600 on low-power devices. Loaded lazily; never downloaded for reduced-motion users.
 - **Type:** Geist + Geist Mono (display / labels) and Inter (body), all self-hosted
-- **Animation:** counting preloader, masked line reveals, a pinned word-by-word manifesto, scroll progress bar, scroll colour grading, sticky process rail, counters, marquee, accordions, magnetic buttons, and a gradient footer wordmark with a wipe + travelling sheen — all hand-written, no GSAP / no Lenis, ~34 KB of JS total
+- **Animation:** counting preloader, masked line reveals, a pinned word-by-word manifesto, scroll progress bar, scroll colour grading, sticky process rail, counters, marquee, accordions, magnetic buttons, and a gradient footer wordmark with a wipe + travelling sheen — all hand-written, no GSAP / no Lenis, ~40 KB of JS total
 - **Contacts:** WhatsApp deep links (with pre-filled messages) for both founders + click-to-call + a form that opens WhatsApp with the details already written
-- **Weight:** ~1.0 MB on disk, of which 671 KB is Three.js (loaded only when the scene is in view). Everything else is fonts (99 KB) + CSS (57 KB) + JS (34 KB) + images.
+- **Weight:** ~1.0 MB on disk, of which 671 KB is Three.js (loaded only when the scene is in view). Everything else is fonts (99 KB) + CSS (70 KB) + JS (40 KB) + images.
 
 ---
 
@@ -89,6 +89,31 @@ If you change a price, update three things: the `<s>` regular price, the `.plan_
 **Colours / type:** `assets/css/styles.css` → `:root`. The accent is `--lime: #c9f24d`.
 The galaxy particle palette and spiral layout are generated in `assets/js/hero-scene.js`; adjust the `colors` values and arm-generation block to tune its warmth and density. Scroll dispersion is driven by `uOpen` and the normalized `aScatter` destinations. The page's separate CSS background wash (`.grade`) still grades with scroll.
 
+## Hamburger-to-X SVG component
+
+The reusable, dependency-free component is demonstrated at [`hamburger-demo.html`](hamburger-demo.html). It animates the SVG path geometry with a damped spring: outer strokes briefly fold into curves, while the centre line contracts and fades. Clicks retarget from the current animation position; Enter and Space work through the native button behavior, and reduced-motion preferences snap directly to the target state.
+
+Load `assets/css/hamburger-morph.css` and `assets/js/hamburger-morph.js`, then provide a button with the three named SVG paths:
+
+```html
+<button type="button" class="hamburger-morph" aria-label="Open menu" aria-expanded="false">
+  <svg class="hamburger-morph__icon" viewBox="0 0 40 40" aria-hidden="true">
+    <path class="hamburger-morph__path" data-hamburger-part="top" d="M8 11 H32" />
+    <path class="hamburger-morph__path" data-hamburger-part="middle" d="M10 20 H30" />
+    <path class="hamburger-morph__path" data-hamburger-part="bottom" d="M8 29 H32" />
+  </svg>
+</button>
+<script src="assets/js/hamburger-morph.js"></script>
+<script>
+  const toggle = HamburgerMorph.mount(document.querySelector(".hamburger-morph"), {
+    onChange: (open) => console.log("Menu open:", open),
+  });
+  // toggle.setExpanded(false) also reverses an in-progress animation smoothly.
+</script>
+```
+
+Configure the icon with CSS custom properties: `--hamburger-icon-size`, `--hamburger-stroke-color`, and `--hamburger-stroke-width`. The controller also updates `aria-expanded` and toggles the accessible label between “Open menu” and “Close menu”.
+
 ## 4. When you get your first project
 
 In `work.html`, each project is an `.slot` article. Replace a slot with a real case study:
@@ -132,11 +157,14 @@ numbers beats ten screenshots.**
 kotelabs/
 ├── index.html            # home: hero, services, work slots, process, pricing, founders, contact
 ├── work.html             # empty-state work page (deliberate, not broken)
+├── hamburger-demo.html   # interactive SVG hamburger-morph component demo
 ├── 404.html
 ├── robots.txt / sitemap.xml
 ├── assets/
-│   ├── css/styles.css    # single stylesheet, tokens at the top
+│   ├── css/styles.css    # main site stylesheet, tokens at the top
+│   ├── css/hamburger-morph.css # shared SVG stroke styles for the menu icon
 │   ├── js/app.js         # UI: loader, menu, line reveals, manifesto, form → WhatsApp
+│   ├── js/hamburger-morph.js # reusable spring-driven SVG menu button
 │   ├── js/hero-scene.js  # persistent Three.js + GLSL particle galaxy
 │   ├── fonts/            # self-hosted Geist, Geist Mono, Inter (no Google Fonts request)
 │   ├── img/og.jpg        # 1200×630 social preview
@@ -156,8 +184,10 @@ kotelabs/
 | `index.html` | The whole landing page. Sections are separated by `<!-- ===== SECTION ===== -->` banners and one section = one `<section>`. | Top-of-file comment explains `.line`, `.word` and `data-reveal` |
 | `work.html` | Deliberately empty work page + founding-slot pitch | `#work` on `index.html` for the same card pattern |
 | `404.html` | Static 404, no JS | — |
-| `assets/css/styles.css` | One stylesheet. Header block maps the sections; `:root` holds every colour and spacing token | `:root` tokens, then `.plan__price`, `.footer__wordmark` |
-| `assets/js/app.js` | All UI behaviour, numbered §1–§14 (config, preloader, menu, reveals, manifesto, counters, accordions, form, lazy 3D loader) | `SITE` config at the top, §12b for the scroll colour grade |
+| `assets/css/styles.css` | Main stylesheet. Header block maps the sections; `:root` holds every colour and spacing token | `:root` tokens, then `.plan__price`, `.footer__wordmark` |
+| `assets/css/hamburger-morph.css` | Shared SVG stroke treatment; size and colour use custom properties | `.hamburger-morph__path` |
+| `assets/js/app.js` | All site UI behaviour, numbered §1–§15 (config, preloader, menu, reveals, manifesto, counters, accordions, form, lazy 3D loader) | `SITE` config at the top, §12b for the scroll colour grade |
+| `assets/js/hamburger-morph.js` | Reusable SVG path morph controller with spring settling, reversal, keyboard/native-button and reduced-motion support | `HamburgerMorph.mount()` |
 | `assets/js/hero-scene.js` | The Three.js + GLSL layer: spiral particle galaxy, cursor wake, scroll dispersion | particle count / arm layout, `uOpen` |
 | `vercel.json` | Static hosting config (long cache for fonts/vendor, revalidate for CSS/JS, security headers) | — |
 
@@ -176,6 +206,7 @@ There is no build step: what you edit is what ships. Comments are deliberately s
 | **Footer wordmark** | Same size, now a live spectrum: clip-wipe reveal left→right, flowing gradient, travelling white sheen | `.footer__wordmark` in CSS + `app.js` §12b |
 | Section headings | Masked line reveals on scroll | `[data-lines]` + `.line` |
 | Progress bar | 1px lime line under the header tracks page progress | `app.js` §3 |
+| Mobile menu icon | Three SVG strokes fold through visible curves into an X; retargets smoothly on rapid input | `hamburger-morph.js`, `hamburger-morph.css` |
 | Loader / reveals fallback | With `prefers-reduced-motion` everything is visible instantly and no 3D ships | end of CSS |
 
 ## 8. How the 3D behaves (the part most agency sites get wrong)

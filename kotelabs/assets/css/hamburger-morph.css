@@ -1,0 +1,36 @@
+/* Shared transparent button and SVG stroke treatment. Configure via custom properties. */
+.hamburger-morph {
+  appearance: none;
+  display: inline-grid;
+  width: var(--hamburger-button-size, 48px);
+  height: var(--hamburger-button-size, 48px);
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.hamburger-morph:focus-visible {
+  outline: 2px solid var(--hamburger-focus-color, currentColor);
+  outline-offset: 4px;
+}
+
+.hamburger-morph__icon {
+  display: block;
+  width: var(--hamburger-icon-size, 28px);
+  height: var(--hamburger-icon-size, 28px);
+  overflow: visible;
+  pointer-events: none;
+}
+
+.hamburger-morph__path {
+  fill: none;
+  stroke: var(--hamburger-stroke-color, currentColor);
+  stroke-width: var(--hamburger-stroke-width, 2.4);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
