@@ -3,24 +3,24 @@
   ===========================================================================
   KotaLabs — work.html
   ---------------------------------------------------------------------------
-  Deliberately empty: no fake projects. It shows the three founding slots that
-  are still open and sends people to WhatsApp. Fill it in as projects ship —
-  the .slot cards in index.html #work are the same pattern.
+  A showcase of live client projects, followed by the three founding slots that
+  are still open. Project summaries and previews should reflect what the live
+  sites actually offer.
   ===========================================================================
 -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Work — KotaLabs | Website studio in Kota, Rajasthan</title>
-<meta name="description" content="KotaLabs is a new studio in Kota, Rajasthan. This page is intentionally empty — we're building our first three client projects now. Claim one of the founding slots.">
+<title>Projects &amp; Work — KotaLabs | Website studio in Kota, Rajasthan</title>
+<meta name="description" content="Explore EDUROUTE and Goswami Optics — two live web experiences featured by KotaLabs, plus details on our founding-client project slots.">
 <meta name="theme-color" content="#07080a">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://kotalabs.vercel.app/work.html">
 
 <meta property="og:type" content="website">
-<meta property="og:title" content="Work — KotaLabs">
-<meta property="og:description" content="Three project slots open. Be our first case study.">
+<meta property="og:title" content="Projects &amp; Work — KotaLabs">
+<meta property="og:description" content="Explore live digital projects from EDUROUTE and Goswami Optics.">
 <meta property="og:image" content="https://kotalabs.vercel.app/assets/img/og.jpg">
 <meta property="og:url" content="https://kotalabs.vercel.app/work.html">
 <meta name="twitter:card" content="summary_large_image">
@@ -104,29 +104,71 @@
 
   <section class="page-head">
     <div class="shell">
-      <p class="eyebrow" data-reveal>Work · 2026</p>
+      <p class="eyebrow" data-reveal>Selected projects · 2026</p>
       <h1 data-lines>
-        <span class="line" style="--i:0"><span>Nothing to show you yet.</span></span>
-        <span class="line" style="--i:1"><span><em>That's on purpose.</em></span></span>
+        <span class="line" style="--i:0"><span>Real sites, built for</span></span>
+        <span class="line" style="--i:1"><span><em>real-world needs.</em></span></span>
       </h1>
       <p class="page-head__sub" data-reveal style="--i:2">
-        KotaLabs is a new studio. We could fill this page with template mockups and call it a portfolio —
-        most agencies do. Instead we're keeping it empty until we have three real client projects with
-        real results behind them.
+        Explore two live experiences: EDUROUTE brings learning and career opportunities together;
+        Goswami Optics connects Kota shoppers with eyewear, 3D try-on, and local showrooms.
       </p>
       <div class="page-head__meta" data-reveal style="--i:3">
-        <span class="tag">Founded 2026</span>
+        <span class="tag">Education technology</span>
+        <span class="tag">Retail · Kota</span>
         <span class="tag">Based in Kota, Rajasthan</span>
-        <span class="tag">3 founding slots open</span>
       </div>
     </div>
   </section>
 
-  <!-- ================= EMPTY STATE / SLOTS ================= -->
+  <!-- ================= PROJECT SHOWCASE ================= -->
+  <section class="section projects-section" aria-labelledby="work-projects-title">
+    <div class="shell">
+      <div class="section__head section__head--single">
+        <div>
+          <p class="eyebrow" data-reveal>Live work</p>
+          <h2 class="h2" id="work-projects-title" data-reveal style="--i:1">Digital experiences with a <em>clear purpose.</em></h2>
+        </div>
+        <p class="lede" data-reveal style="--i:2">Browse the live sites and see how each one helps its audience find the next step.</p>
+      </div>
+
+      <div class="project-grid">
+        <article class="project-card" data-reveal style="--i:0">
+          <a class="project-card__visual" href="https://edurouute.netlify.app/" target="_blank" rel="noopener noreferrer" aria-label="Open EDUROUTE website">
+            <img src="assets/img/eduroute-preview.svg" alt="Illustrated website preview of EDUROUTE, showing the Build Skills. Get Hired. headline and learning roadmap interface." width="1440" height="900" loading="lazy" decoding="async">
+            <span class="project-card__visit">View live site <span aria-hidden="true">↗</span></span>
+          </a>
+          <div class="project-card__body">
+            <div class="project-card__top"><p class="project-card__type">Education · Career platform</p><span class="project-card__index">01 / 02</span></div>
+            <h3 class="project-card__title">EDUROUTE</h3>
+            <p class="project-card__summary">A student growth platform bringing skill assessments, personalized roadmaps, internships, jobs, and hackathons together in one place.</p>
+            <div class="project-card__tags" aria-label="Project features"><span class="tag">Learning paths</span><span class="tag">Opportunities</span><span class="tag">Student tools</span></div>
+            <a class="project-card__link" href="https://edurouute.netlify.app/" target="_blank" rel="noopener noreferrer">Explore EDUROUTE <span aria-hidden="true">↗</span></a>
+          </div>
+        </article>
+
+        <article class="project-card" data-reveal style="--i:1">
+          <a class="project-card__visual" href="https://goswami-optics.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="Open Goswami Optics website">
+            <img src="assets/img/goswami-optics-preview.svg" alt="Illustrated website preview of Goswami Optics, with eyewear discovery, 3D try-on, and Kota showroom details." width="1440" height="900" loading="lazy" decoding="async">
+            <span class="project-card__visit">View live site <span aria-hidden="true">↗</span></span>
+          </a>
+          <div class="project-card__body">
+            <div class="project-card__top"><p class="project-card__type">Retail · Eyewear</p><span class="project-card__index">02 / 02</span></div>
+            <h3 class="project-card__title">GOSWAMI OPTICS</h3>
+            <p class="project-card__summary">A Kota eyewear storefront for browsing branded frames, exploring products in 3D with virtual try-on, and finding either local showroom.</p>
+            <div class="project-card__tags" aria-label="Project features"><span class="tag">Product discovery</span><span class="tag">3D try-on</span><span class="tag">Local retail</span></div>
+            <a class="project-card__link" href="https://goswami-optics.vercel.app/" target="_blank" rel="noopener noreferrer">Explore Goswami Optics <span aria-hidden="true">↗</span></a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FOUNDING PROJECT SLOTS ================= -->
   <section class="section">
     <div class="shell">
       <div class="work-note" data-reveal>
-        <i aria-hidden="true"></i> Project slots — 0 of 3 taken
+        <i aria-hidden="true"></i> Founding-client slots — 0 of 3 taken
       </div>
 
       <div class="slots">
@@ -177,12 +219,12 @@
       </div>
 
       <div class="empty-state" style="margin-top:2rem" data-reveal>
-        <h2 class="empty-state__title">What a founding client gets</h2>
-        <p>Because you'd be trusting us without a track record, the first three projects come with terms we won't offer later:</p>
+        <h2 class="empty-state__title">Join as a founding client</h2>
+        <p>For our three founding-client slots, these added benefits are available with the project package you choose:</p>
         <ul class="case-list">
           <li><span>01</span><span>Founding-client pricing — up to 47% off the package you choose (sites from ₹4,999).</span></li>
           <li><span>02</span><span>Direct WhatsApp access to both founders, not a support inbox.</span></li>
-          <li><span>03</span><span>A full case study written about your project — and the credit for being first.</span></li>
+          <li><span>03</span><span>A written case study featuring your project, with your approval and credit as a founding client.</span></li>
           <li><span>04</span><span>Priority timelines: your project jumps the queue.</span></li>
           <li><span>05</span><span>Sixty days of post-launch support instead of thirty.</span></li>
         </ul>

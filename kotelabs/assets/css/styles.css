@@ -974,6 +974,106 @@ h1, h2, h3, h4, p, figure, blockquote { margin: 0; }
 .slot__foot { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 
 /* ==========================================================================
+   PROJECT SHOWCASE
+   ========================================================================== */
+.project-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+@media (min-width: 760px) {
+  .project-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; }
+}
+.project-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.012));
+  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.18);
+  transition: border-color 0.35s ease, transform 0.5s var(--ease), box-shadow 0.35s ease;
+}
+.project-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(201, 242, 77, 0.42);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.26);
+}
+.project-card__visual {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 1.58;
+  background: #16181b;
+  border-bottom: 1px solid var(--line);
+}
+.project-card__visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s var(--ease), filter 0.45s ease;
+}
+.project-card:hover .project-card__visual img { transform: scale(1.035); filter: saturate(1.06); }
+.project-card__visit {
+  position: absolute;
+  right: 0.85rem;
+  bottom: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.72rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  background: rgba(8, 9, 10, 0.74);
+  color: #fff;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.project-card__body {
+  display: flex;
+  min-height: 290px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding: clamp(1.2rem, 2.3vw, 1.8rem);
+}
+.project-card__top { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 0.75rem; }
+.project-card__type, .project-card__index {
+  font-family: var(--mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.1em;
+  line-height: 1.5;
+  text-transform: uppercase;
+  color: var(--muted-dim);
+}
+.project-card__index { white-space: nowrap; }
+.project-card__title {
+  font-family: var(--display);
+  font-size: clamp(1.45rem, 2.3vw, 2rem);
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+}
+.project-card__summary { max-width: 52ch; color: var(--muted); font-size: 0.92rem; line-height: 1.65; }
+.project-card__tags { display: flex; flex-wrap: wrap; gap: 0.42rem; }
+.project-card__tags .tag { font-size: 0.57rem; }
+.project-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 0.25rem;
+  color: var(--lime);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  transition: gap 0.25s ease, color 0.25s ease;
+}
+.project-card__link:hover { gap: 0.75rem; color: #e1ff88; }
+
+/* ==========================================================================
    PROCESS (sticky rail)
    ========================================================================== */
 .process { display: grid; gap: clamp(2rem, 4vw, 3.5rem); }
