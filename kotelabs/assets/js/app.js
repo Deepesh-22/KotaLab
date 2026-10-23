@@ -182,11 +182,19 @@
         if (first) first.focus({ preventScroll: true });
       }
     };
-    burger.addEventListener("click", () => setMenu(burger.getAttribute("aria-expanded") !== "true"));
-    menu.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => setMenu(false)));
+    const menuToggle = window.HamburgerMorph && burger.matches("[data-hamburger-morph]")
+      ? window.HamburgerMorph.mount(burger, { onChange: setMenu })
+      : null;
+
+    // Native button click handling provides Enter/Space keyboard support.
+    if (!menuToggle) {
+      burger.addEventListener("click", () => setMenu(burger.getAttribute("aria-expanded") !== "true"));
+    }
+    const closeMenu = () => menuToggle ? menuToggle.setExpanded(false) : setMenu(false);
+    menu.querySelectorAll("a").forEach((a) => a.addEventListener("click", closeMenu));
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && menu.classList.contains("is-open")) {
-        setMenu(false);
+        closeMenu();
         burger.focus();
       }
     });
