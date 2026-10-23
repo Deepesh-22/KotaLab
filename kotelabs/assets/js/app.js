@@ -173,6 +173,7 @@
   if (burger && menu) {
     const setMenu = (open) => {
       burger.setAttribute("aria-expanded", String(open));
+      burger.setAttribute("aria-label", open ? "Close menu" : "Open menu");
       menu.classList.toggle("is-open", open);
       menu.setAttribute("aria-hidden", String(!open));
       document.body.classList.toggle("is-locked", open);
