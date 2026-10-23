@@ -15,9 +15,10 @@
  *   9. marquee
  *  10. accordions (pricing inclusions)
  *  11. magnetic buttons
- *  12. contact form → WhatsApp
- *  13. misc (year stamps)
- *  14. lazy Three.js hero
+ *  12. mouse-follow tilt on project and pricing cards
+ *  13. contact form → WhatsApp
+ *  14. misc (year stamps)
+ *  15. lazy Three.js hero
  */
 
 (function () {
@@ -358,7 +359,49 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* 12. Contact form → WhatsApp                                         */
+  /* 12. Mouse-follow tilt for project and pricing cards                 */
+  /* ------------------------------------------------------------------ */
+  if (finePointer && !reduceMotion) {
+    document.querySelectorAll(".project-card, .plan").forEach((card) => {
+      const maxTilt = card.matches(".plan") ? 4.5 : 6;
+      let frame = 0;
+      let pointer = null;
+
+      const updateTilt = (event) => {
+        if (event.pointerType === "touch") return;
+        pointer = { x: event.clientX, y: event.clientY };
+        if (frame) return;
+
+        frame = requestAnimationFrame(() => {
+          frame = 0;
+          if (!pointer) return;
+          const rect = card.getBoundingClientRect();
+          if (!rect.width || !rect.height) return;
+          const x = (pointer.x - rect.left) / rect.width * 2 - 1;
+          const y = (pointer.y - rect.top) / rect.height * 2 - 1;
+          card.style.setProperty("--tilt-x", `${(-y * maxTilt).toFixed(2)}deg`);
+          card.style.setProperty("--tilt-y", `${(x * maxTilt).toFixed(2)}deg`);
+          card.classList.add("is-tilting");
+        });
+      };
+
+      const resetTilt = () => {
+        pointer = null;
+        if (frame) cancelAnimationFrame(frame);
+        frame = 0;
+        card.classList.remove("is-tilting");
+        card.style.removeProperty("--tilt-x");
+        card.style.removeProperty("--tilt-y");
+      };
+
+      card.addEventListener("pointermove", updateTilt, { passive: true });
+      card.addEventListener("pointerleave", resetTilt);
+      card.addEventListener("pointercancel", resetTilt);
+    });
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* 13. Contact form → WhatsApp                                         */
   /* ------------------------------------------------------------------ */
   const form = document.getElementById("project-form");
   if (form) {
@@ -432,14 +475,14 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* 13. Year stamps                                                     */
+  /* 14. Year stamps                                                     */
   /* ------------------------------------------------------------------ */
   document.querySelectorAll("[data-year]").forEach((el) => {
     el.textContent = String(new Date().getFullYear());
   });
 
   /* ------------------------------------------------------------------ */
-  /* 14. Lazy Three.js hero                                              */
+  /* 15. Lazy Three.js hero                                              */
   /* ------------------------------------------------------------------ */
   const heroCanvas = document.getElementById("scene");
   if (heroCanvas && !reduceMotion) {
