@@ -5,7 +5,7 @@
   ---------------------------------------------------------------------------
   One page, hand-written, no build step. Read it top to bottom:
   preloader → header + menu → hero → manifesto → marquee → services →
-  work slots → process → stats → pricing → founders → contact → CTA → footer.
+  work slots → projects → process + standards → pricing → founders → contact → CTA → footer.
 
   Three conventions used all over this file:
     .line > span       a line of a heading, masked; JS adds .is-in to reveal it
@@ -480,85 +480,51 @@
   </section>
 
   <!-- ============================== PROCESS ============================== -->
-  <section class="section" id="process">
+  <section class="section" id="process" aria-labelledby="process-title">
     <div class="shell">
-      <div class="process">
-        <div class="process__aside">
-          <p class="eyebrow">Process</p>
-          <h2 class="h2" data-lines style="margin-top:1rem">
-            <span class="line" style="--i:0"><span>From first call to</span></span>
-            <span class="line" style="--i:1"><span>live site in <strong>3–4 weeks.</strong></span></span>
-          </h2>
-          <p class="lede" data-reveal style="--i:2;margin-top:1.2rem">
-            No forty-page proposals. You will know exactly what happens each week, who is doing it,
-            and what we need from you.
+      <div class="section__head process__head">
+        <div>
+          <p class="eyebrow" data-reveal>Process</p>
+          <h2 class="h2" id="process-title" data-reveal style="--i:1">Clear steps. <em>No guesswork.</em></h2>
+        </div>
+        <div class="process__intro">
+          <p class="lede" data-reveal style="--i:2">
+            We scope it together, approve the design before development, test on real devices, then launch and support it. Most sites go live in 3–4 weeks.
           </p>
-          <p data-reveal style="--i:3;margin-top:1.5rem">
+          <p data-reveal style="--i:3;margin-top:1.25rem">
             <a class="btn btn--solid btn--sm" href="#contact">Start a project</a>
           </p>
         </div>
-
-        <div class="process__rail">
-          <article class="process__step">
-            <span class="process__num">01</span>
-            <div>
-              <h3 class="process__title">Discover</h3>
-              <p class="process__text">A twenty-minute call — WhatsApp, or in person in Kota. We look at your business, your customers and what a visitor should do on the site. You get a fixed quote and timeline in writing.</p>
-              <p class="process__meta">Day 1–2 · Free</p>
-            </div>
-          </article>
-
-          <article class="process__step">
-            <span class="process__num">02</span>
-            <div>
-              <h3 class="process__title">Design</h3>
-              <p class="process__text">First we show you the homepage design — text, layout and colour. You see it before a line of code is written, so changes are cheap and fast.</p>
-              <p class="process__meta">Week 1–2 · 2 revision rounds</p>
-            </div>
-          </article>
-
-          <article class="process__step">
-            <span class="process__num">03</span>
-            <div>
-              <h3 class="process__title">Build</h3>
-              <p class="process__text">We build it for real devices, test on a cheap Android phone over 4G, and wire up WhatsApp, call buttons, forms, maps and Google. You get a private preview link to share before launch.</p>
-              <p class="process__meta">Week 2–3 · Preview link</p>
-            </div>
-          </article>
-
-          <article class="process__step">
-            <span class="process__num">04</span>
-            <div>
-              <h3 class="process__title">Launch &amp; support</h3>
-              <p class="process__text">We connect your domain, set up Analytics and Search Console, help you claim your Google Business Profile, and stay on WhatsApp for fixes after launch.</p>
-              <p class="process__meta">Week 4 · 30–60 days support</p>
-            </div>
-          </article>
-        </div>
       </div>
-    </div>
-  </section>
-
-  <!-- ============================== STATS ============================== -->
-  <section class="section section--tight section--flush" aria-label="How we work, in numbers">
-    <div class="shell">
-      <div class="stats">
-        <div class="stat" data-reveal style="--i:0">
-          <p class="stat__num"><span data-count="3">3</span>–4 <em>weeks</em></p>
-          <p class="stat__label">Typical build time, start to live</p>
-        </div>
-        <div class="stat" data-reveal style="--i:1">
-          <p class="stat__num">&lt;<span data-count="2.5" data-suffix="s">2.5s</span></p>
-          <p class="stat__label">Load target on a ₹10,000 phone over 4G</p>
-        </div>
-        <div class="stat" data-reveal style="--i:2">
-          <p class="stat__num"><span data-count="100" data-suffix="%">100%</span> <em>yours</em></p>
-          <p class="stat__label">Code and domain handover — no lock-in</p>
-        </div>
-        <div class="stat" data-reveal style="--i:3">
-          <p class="stat__num">2 <em>hrs</em></p>
-          <p class="stat__label">Average reply time, 10am–9pm IST</p>
-        </div>
+      <div class="process-metrics" role="list" aria-label="What to expect from a KotaLabs project">
+        <article class="stat" role="listitem" data-reveal style="--i:0">
+          <div class="stat__top">
+            <p class="stat__num"><span data-count="3">3</span>–4 <em>weeks</em></p>
+            <svg class="stat__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true"><circle cx="24" cy="25" r="15" stroke="currentColor" stroke-width="2.5"/><path d="M24 16v9l6 4M18 5h12M24 5v5M36 13l3-3" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <p class="stat__label">From first conversation to launch</p>
+        </article>
+        <article class="stat" role="listitem" data-reveal style="--i:1">
+          <div class="stat__top">
+            <p class="stat__num"><span data-count="2.4">2.4</span><em>s</em></p>
+            <svg class="stat__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M8 31a17 17 0 1 1 32 0" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="m24 27 10-10M12 32h24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle cx="24" cy="27" r="3" fill="currentColor"/><path d="M14 13l3 3M34 13l-3 3" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+          </div>
+          <p class="stat__label">Target load on a ₹10,000 phone over 4G</p>
+        </article>
+        <article class="stat" role="listitem" data-reveal style="--i:2">
+          <div class="stat__top">
+            <p class="stat__num"><span data-count="100" data-suffix="%">100%</span> <em>yours</em></p>
+            <svg class="stat__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 5 39 11v11c0 10-6.4 16.8-15 21-8.6-4.2-15-11-15-21V11l15-6Z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="m17 24 5 5 10-11" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <p class="stat__label">Code, domain and project files — no lock-in</p>
+        </article>
+        <article class="stat" role="listitem" data-reveal style="--i:3">
+          <div class="stat__top">
+            <p class="stat__num">2 <em>hrs</em></p>
+            <svg class="stat__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M8 10h32v23H22l-9 7v-7H8V10Z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="M16 21h16M16 27h10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+          </div>
+          <p class="stat__label">Typical founder reply, 10am–9pm IST</p>
+        </article>
       </div>
     </div>
   </section>
