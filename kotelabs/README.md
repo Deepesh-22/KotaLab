@@ -8,7 +8,7 @@ No build step, no npm install, no framework. Upload the folder and it runs.
 - **Type:** Geist + Geist Mono (display / labels) and Inter (body), all self-hosted
 - **Animation:** counting preloader, masked line reveals, a pinned word-by-word manifesto, scroll progress bar, scroll colour grading, sticky process rail, counters, marquee, accordions, magnetic buttons, and a gradient footer wordmark with a wipe + travelling sheen — all hand-written, no GSAP / no Lenis, ~40 KB of JS total
 - **Contacts:** WhatsApp deep links (with pre-filled messages) for both founders + click-to-call + a form that opens WhatsApp with the details already written
-- **Weight:** ~1.0 MB on disk, of which 671 KB is Three.js (loaded only when the scene is in view). Everything else is fonts (99 KB) + CSS (70 KB) + JS (40 KB) + images.
+- **Weight:** ~1.5 MB on disk, of which 671 KB is Three.js (loaded only when the scene is in view). Everything else is fonts (99 KB) + CSS (71 KB) + JS (39 KB) + images. The two project screenshots are served as WebP (~156 KB) with a JPEG fallback (~203 KB) via `<picture>`.
 
 ---
 
@@ -168,6 +168,8 @@ kotelabs/
 │   ├── js/hero-scene.js  # persistent Three.js + GLSL particle galaxy
 │   ├── fonts/            # self-hosted Geist, Geist Mono, Inter (no Google Fonts request)
 │   ├── img/og.jpg        # 1200×630 social preview
+│   ├── img/eduroute-preview.(webp|jpg)        # 1200×875 project screenshot
+│   ├── img/goswami-optics-preview.(webp|jpg)  # 1200×773 project screenshot
 │   ├── img/vansh.jpg     # founder portrait, 560×560 square (card)
 │   └── img/vansh-sm.jpg  # same crop at 160×160 (hero chip)
 ├── vendor/
@@ -230,6 +232,27 @@ Vansh's portrait is wired in at two sizes, both cropped from one square master:
 | `assets/img/vansh.jpg` | 560×560 | Founder card (rendered at 88px desktop / 76px mobile, circle-masked) |
 | `assets/img/vansh-sm.jpg` | 160×160 | Vansh’s 32px hero avatar |
 | `assets/img/deepesh.jpg` | 560×560 | Deepesh’s founder card portrait |
+
+## 9b. Project screenshots
+
+Each project card ships two files — `*-preview.webp` and `*-preview.jpg` — wrapped in a `<picture>`
+so modern browsers download only the WebP (~40% smaller) and everything else falls back to the JPEG:
+
+```html
+<picture>
+  <source srcset="assets/img/eduroute-preview.webp" type="image/webp">
+  <img src="assets/img/eduroute-preview.jpg" alt="" width="1200" height="875" loading="lazy" decoding="async">
+</picture>
+```
+
+Regenerate both from one full-resolution master, and keep the `width`/`height` attributes in sync with
+the real pixel size — they reserve the box so the card does not jump while the image loads:
+
+```bash
+cd assets/img
+convert master.png -resize 1200x -quality 90 -strip eduroute-preview.webp
+convert master.png -resize 1200x -quality 86 -strip -interlace Plane eduroute-preview.jpg
+```
 
 The crop is deliberately **face-first**: hair touches the top of the circle, chin sits at ~80%, ears just inside the edge — so the face fills the avatar instead of floating in it. The head is nudged ~5% right of the frame centre to compensate for head tilt.
 
