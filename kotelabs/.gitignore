@@ -1,0 +1,13 @@
+# Local / tooling noise — not part of the deploy
+.vercel/
+.env
+.env.*
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+
+# QA screenshots and scratch output live outside this folder
+shots/
+screens/
+*.png.tmp
