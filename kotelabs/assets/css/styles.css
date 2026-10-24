@@ -1503,6 +1503,82 @@ h1, h2, h3, h4, p, figure, blockquote { margin: 0; }
 .founder__actions .btn { flex: 1 1 auto; }
 
 /* ==========================================================================
+   BUSINESS CREDENTIALS
+   ========================================================================== */
+@property --credential-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+@keyframes credential-orbit {
+  to { --credential-angle: 360deg; }
+}
+.credentials__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.credential-card {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.75rem;
+  overflow: hidden;
+  padding: clamp(1.25rem, 2.4vw, 2rem);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.008)), var(--ink-2);
+  transition: border-color 0.35s ease, box-shadow 0.4s ease;
+}
+.credential-card::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: conic-gradient(from var(--credential-angle), transparent 0deg 255deg, rgba(201, 242, 77, 0.16) 286deg, rgba(201, 242, 77, 0.88) 326deg, #efffb4 338deg, transparent 360deg);
+  opacity: 0;
+  pointer-events: none;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  transition: opacity 0.3s ease;
+}
+.credential-card > * { position: relative; z-index: 1; }
+.credential-card:hover, .credential-card:focus-within {
+  border-color: rgba(201, 242, 77, 0.42);
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.26), 0 0 26px rgba(201, 242, 77, 0.055);
+}
+.credential-card:hover::before, .credential-card:focus-within::before {
+  opacity: 1;
+  animation: credential-orbit 4.2s linear infinite;
+}
+.credential-card__top { display: flex; min-height: 2rem; align-items: center; justify-content: space-between; gap: 1rem; }
+.credential-card__index { color: var(--muted-dim); font: 0.62rem/1.4 var(--mono); letter-spacing: 0.12em; }
+.credential-card__mark { color: var(--bone); font: 600 1.16rem/1 var(--display); letter-spacing: 0.02em; }
+.credential-card__mark > span { color: var(--lime); }
+.credential-card__mark--istart { font-size: 1.4rem; letter-spacing: -0.06em; }
+.credential-card__status { margin-top: 0.6rem; color: var(--lime); font: 0.66rem/1.4 var(--mono); letter-spacing: 0.11em; text-transform: uppercase; }
+.credential-card__meta { color: var(--muted); font-size: 0.88rem; line-height: 1.5; }
+.credential-card__number {
+  display: grid;
+  gap: 0.38rem;
+  margin-top: 0.3rem;
+  padding: 0.85rem 0.9rem;
+  border: 1px solid var(--line-soft);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.18);
+}
+.credential-card__number > span { color: var(--muted-dim); font: 0.6rem/1.4 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; }
+.credential-card__number > strong { color: var(--bone); font: 500 0.82rem/1.45 var(--mono); overflow-wrap: anywhere; }
+.credential-card__link { display: inline-flex; width: fit-content; align-items: center; gap: 0.5rem; margin-top: 0.25rem; color: var(--muted); font: 0.7rem/1.5 var(--mono); transition: color 0.25s ease, gap 0.3s var(--ease); }
+.credential-card__link:hover, .credential-card__link:focus-visible { gap: 0.75rem; color: var(--lime); }
+.credentials__note { max-width: 76ch; margin-top: 1.5rem; color: var(--muted-dim); font-size: 0.82rem; line-height: 1.65; }
+
+/* ==========================================================================
    CONTACT
    ========================================================================== */
 .contact { display: grid; gap: clamp(2rem, 4.5vw, 4rem); }
@@ -1980,6 +2056,7 @@ h1, h2, h3, h4, p, figure, blockquote { margin: 0; }
   .manifesto .eyebrow { margin-bottom: 0.8rem !important; }
   .manifesto__text { font-size: clamp(1.4rem, 6.4vw, 2.1rem); max-width: 22ch; }
   .footer { padding-bottom: 6rem; }
+  .credentials__grid { grid-template-columns: minmax(0, 1fr); }
   .footer__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.8rem 1.2rem; }
   .footer__brand { grid-column: 1 / -1; }
   .footer__col { min-width: 0; }
