@@ -7,6 +7,7 @@ No build step, no npm install, no framework. Upload the folder and it runs.
 - **3D:** one persistent Three.js + GLSL layer behind the *whole page* — a warm-white spiral galaxy made from tiny circular particles, with a bright core, gentle twinkle, cursor wake, and a **scroll-driven dispersion** that opens the spiral into a screen-wide dust field. Uses 32,000 particles on desktop, 15,000 on mobile, and 7,600 on low-power devices. Loaded lazily; never downloaded for reduced-motion users.
 - **Type:** Geist + Geist Mono (display / labels) and Inter (body), all self-hosted
 - **Animation:** counting preloader, masked line reveals, a pinned word-by-word manifesto, scroll progress bar, scroll colour grading, sticky process rail, counters, marquee, accordions, magnetic buttons, and a gradient footer wordmark with a wipe + travelling sheen — all hand-written, no GSAP / no Lenis, ~40 KB of JS total
+- **Business credentials:** a responsive Udyam/iStart Rajasthan trust section appears between founders and contact; Udyam number is shown from the certificate and cards link to official portals
 - **Contacts:** WhatsApp deep links (with pre-filled messages) for both founders + click-to-call + a form that opens WhatsApp with the details already written
 - **Weight:** ~1.0 MB on disk, of which 671 KB is Three.js (loaded only when the scene is in view). Everything else is fonts (99 KB) + CSS (70 KB) + JS (40 KB) + images.
 
