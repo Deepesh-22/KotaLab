@@ -63,7 +63,7 @@ git push -u origin main
 - The JS-side config (which number the contact form sends to) is at the top of `assets/js/app.js` → `SITE`.
 - Every WhatsApp link already carries a pre-filled message; edit the `?text=` value to change the wording.
 
-**Email / address / hours:** `hello@kotelabs.com`, `Kota, Rajasthan 324005`, `Mon–Sun 10:00–21:00` — in the footer of `index.html` and `work.html`.
+**Email / address / hours:** `vanshkhandelwal777@gmail.com`, `Kota, Rajasthan 324005`, `Mon–Sun 10:00–21:00` — in the footer of `index.html` and `work.html`.
 
 **Prices:** in `index.html` inside the `.plans` block. Each plan shows a struck-through regular price, a % off badge and the offer price:
 

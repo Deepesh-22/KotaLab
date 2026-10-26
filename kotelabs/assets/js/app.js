@@ -35,8 +35,8 @@
   /* ------------------------------------------------------------------ */
   const SITE = {
     whatsapp: "917898140600", // Vansh — where the contact form is sent
-    loaderMinMs: 900,
-    loaderMaxMs: 3200,
+    loaderMinMs: 420,
+    loaderMaxMs: 1100,
   };
 
   /* ------------------------------------------------------------------ */
@@ -47,6 +47,13 @@
   const loaderBar = document.getElementById("loader-bar");
   const loaderStatus = document.getElementById("loader-status");
   const loaderWords = loader ? Array.from(loader.querySelectorAll(".loader__word span")) : [];
+
+  const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  const slowConnection = !!(conn && (conn.saveData || /^(slow-)?2g|3g$/i.test(conn.effectiveType || "")));
+  let seenInSession = false;
+  try {
+    seenInSession = window.sessionStorage.getItem("kl_seen") === "1";
+  } catch (_) {}
 
   const startHero = () => {
     document.querySelectorAll(".hero .line").forEach((line) => line.classList.add("is-in"));
@@ -61,12 +68,13 @@
     loader.classList.add("is-done");
     document.body.classList.remove("is-loading");
     loader.setAttribute("aria-hidden", "true");
-    // let the loader fade before the hero animates in
-    window.setTimeout(startHero, reduceMotion ? 0 : 120);
-    window.setTimeout(() => loader.remove(), 900);
+    // let the loader fade as the hero animates in — keeps LCP well under 2.5s
+    window.setTimeout(startHero, reduceMotion ? 0 : 60);
+    window.setTimeout(() => loader.remove(), 750);
   };
 
-  if (loader && !reduceMotion) {
+  if (loader && !reduceMotion && !slowConnection && !seenInSession) {
+    try { window.sessionStorage.setItem("kl_seen", "1"); } catch (_) {}
     document.body.classList.add("is-loading");
     const t0 = performance.now();
     let shown = 0;
@@ -81,8 +89,8 @@
     ];
 
     const tick = () => {
-      // monotonic ramp in fixed steps — never stalls short of 97
-      const next = Math.min(97, shown + Math.random() * 8 + 4);
+      // monotonic ramp in snappy steps — protects Core Web Vitals LCP
+      const next = Math.min(97, shown + Math.random() * 10 + 13);
       shown = next;
       const pct = Math.round(shown);
       if (loaderNum) loaderNum.textContent = String(pct);
@@ -101,7 +109,7 @@
       }
 
       if (shown < 97) {
-        window.setTimeout(tick, 85);
+        window.setTimeout(tick, 55);
       } else {
         complete();
       }
@@ -117,21 +125,19 @@
         if (loaderBar) loaderBar.style.width = "100%";
         loaderWords.forEach((w) => w.classList.add("on"));
         if (loaderStatus) loaderStatus.textContent = "Ready";
-        window.setTimeout(finishLoading, 220);
+        window.setTimeout(finishLoading, 110);
       }, wait);
     };
 
-    // never trap the user behind the loader
+    // never trap the user or Googlebot behind the loader
     window.setTimeout(complete, SITE.loaderMaxMs);
-    window.setTimeout(tick, 120);
+    window.setTimeout(tick, 60);
 
-    // start counting once fonts are ready (or 1.2s at worst)
-    // fonts arriving late must not hold the page hostage
     if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(() => { if (!finished && shown < 40) shown = 40; });
+      document.fonts.ready.then(() => { if (!finished && shown < 50) shown = 50; });
     }
   } else {
-    // reduced motion (or no loader in the DOM): skip straight to the content
+    // reduced motion, slow connection, repeat visit, or no loader: skip straight to content
     document.body.classList.remove("is-loading");
     if (loader) loader.remove();
     startHero();
@@ -518,6 +524,20 @@
     } else {
       load3d();
     }
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* 16. First-party Vercel Web Analytics & Speed Insights (prod only)   */
+  /* ------------------------------------------------------------------ */
+  if (/\.vercel\.app$/i.test(window.location.hostname)) {
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+    ["/_vercel/insights/script.js", "/_vercel/speed-insights/script.js"].forEach((src) => {
+      const s = document.createElement("script");
+      s.defer = true;
+      s.src = src;
+      document.head.appendChild(s);
+    });
   }
 
   onScrollFrame();
