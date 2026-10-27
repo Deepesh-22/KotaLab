@@ -185,8 +185,8 @@ function init(canvas) {
 
       vColor = aColor;
       vSeed = aSeed;
-      // Preserve the bright galaxy in the hero, then keep the scattered field low-contrast behind copy.
-      vFade = mix(1.0, 0.045, uContentFade);
+      // Preserve the bright galaxy in the hero, then keep scattered particles faintly visible behind copy.
+      vFade = mix(1.0, 0.12, uContentFade);
     }
   `;
 
@@ -320,9 +320,9 @@ function init(canvas) {
       0
     );
 
-    // Lower the canvas too; retain the mobile baseline while fading the scattered field on every screen.
+    // Fade the canvas without removing the particles entirely, keeping them visible but subdued on every screen.
     const sceneOpacity = mobile ? 0.62 : 1.0;
-    canvas.style.opacity = String(sceneOpacity * (1.0 - contentFade * 0.78));
+    canvas.style.opacity = String(sceneOpacity * (1.0 - contentFade * 0.48));
     renderer.render(scene, camera);
   }
 
