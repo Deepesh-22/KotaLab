@@ -312,8 +312,8 @@ function init(canvas) {
 
     const p = pageProgress;
     const open = smoothstep(0.0, 1.0, spreadProgress);
-    // Dim early in the spread, then keep particles subtly visible through the Services copy.
-    const contentFade = smoothstep(0.0, 0.28, spreadProgress);
+    // Fade brightness gradually with the spread, leaving a subdued but visible field behind Services copy.
+    const contentFade = open;
     const mobile = group.userData.mobile;
     const shift = group.userData.shift || 0;
 
