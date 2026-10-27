@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://kotalabs.vercel.app/sitemap.xml
+Sitemap: https://www.kotalabs.in/sitemap.xml

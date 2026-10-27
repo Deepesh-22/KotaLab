@@ -35,7 +35,7 @@ ES modules and the `THREE` import need `http://`, not `file://`.
 | **GitHub Pages** | Push, then Settings → Pages → deploy from branch root. |
 | **cPanel / Hostinger** | Upload the folder contents to `public_html`. |
 
-The current site URL is `https://kotalabs.vercel.app/`. Add a custom domain only if you own one, then update the canonical and social metadata to match.
+The canonical public site is `https://www.kotalabs.in/`. The Vercel preview hostname redirects there so search engines consolidate signals on the owned domain. Keep canonical, social metadata, robots.txt, and sitemap.xml on the same host.
 
 **Pushing to GitHub for the first time**
 
@@ -142,11 +142,11 @@ numbers beats ten screenshots.**
 
 ## 5. Before you go live — small checklist
 
-- [ ] Verify the canonical URL, Open Graph URL, `sitemap.xml` and `robots.txt` use `https://kotalabs.vercel.app/` (or your custom domain if configured).
+- [ ] Verify the canonical URL, Open Graph URL, `sitemap.xml` and `robots.txt` use `https://www.kotalabs.in/`; confirm `kotalabs.vercel.app` permanently redirects to it.
 - [ ] Create `hello@kotelabs.com` (or change the mailto).
 - [ ] Add Google Analytics 4 or Plausible — one `<script>` before `</body>`.
 - [ ] Claim the **Google Business Profile** for "KotaLabs, Kota" (this drives local calls more than the site does).
-- [ ] Add the site to Google Search Console and submit `sitemap.xml`.
+- [ ] Add the canonical property `https://www.kotalabs.in/` to Google Search Console and submit `https://www.kotalabs.in/sitemap.xml`; inspect indexing for the homepage and work page. Re-submit after substantial content changes.
 - [ ] Add your Instagram/Google Maps links to the `sameAs` array in the JSON-LD at the top of `index.html`.
 - [ ] Replace the `og:image` (`assets/img/og.jpg`) if you change the tagline.
 - [ ] Decide the real end condition for the launch offer (slots filled / a date) and make sure the site, WhatsApp replies and your Instagram posts say the same thing.
