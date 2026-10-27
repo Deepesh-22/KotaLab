@@ -185,7 +185,7 @@ function init(canvas) {
 
       vColor = aColor;
       vSeed = aSeed;
-      // Keep the galaxy vivid in the hero, then dim the scattered field so page copy stays clear.
+      // Preserve the bright galaxy in the hero, then keep scattered particles faintly visible behind copy.
       vFade = mix(1.0, 0.12, uContentFade);
     }
   `;
@@ -262,15 +262,32 @@ function init(canvas) {
   const smooth = { x: 0, y: 0 };
   let targetProgress = 0;
   let pageProgress = 0;
+  let targetSpreadProgress = 0;
+  let spreadProgress = 0;
+  const manifestoSection = document.getElementById("manifesto");
+  const servicesSection = document.getElementById("services");
 
   window.addEventListener("pointermove", (event) => {
     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
     pointer.y = (event.clientY / window.innerHeight) * 2 - 1;
   }, { passive: true });
 
+  const sectionTop = (section) => section
+    ? section.getBoundingClientRect().top + window.scrollY
+    : 0;
+
   const readScroll = () => {
     const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
     targetProgress = Math.min(1, Math.max(0, window.scrollY / max));
+
+    // Start opening the hero galaxy as the manifesto scrolls in; finish as Services arrives.
+    const spreadStart = sectionTop(manifestoSection);
+    const spreadEnd = sectionTop(servicesSection) + window.innerHeight * 0.35;
+    targetSpreadProgress = clamp(
+      (window.scrollY - spreadStart) / Math.max(1, spreadEnd - spreadStart),
+      0,
+      1
+    );
   };
   window.addEventListener("scroll", readScroll, { passive: true });
   readScroll();
@@ -289,13 +306,14 @@ function init(canvas) {
 
   function draw(time) {
     pageProgress += (targetProgress - pageProgress) * 0.055;
+    spreadProgress += (targetSpreadProgress - spreadProgress) * 0.055;
     smooth.x += (pointer.x - smooth.x) * 0.045;
     smooth.y += (pointer.y - smooth.y) * 0.045;
 
     const p = pageProgress;
-    const open = smoothstep(0.015, 0.72, p);
-    // Fade in step with the galaxy opening, so the fully scattered field sits quietly behind text.
-    const contentFade = smoothstep(0.08, 0.58, open);
+    const open = smoothstep(0.0, 1.0, spreadProgress);
+    // Fade brightness gradually with the spread, leaving a subdued but visible field behind Services copy.
+    const contentFade = open;
     const mobile = group.userData.mobile;
     const shift = group.userData.shift || 0;
 
@@ -319,8 +337,9 @@ function init(canvas) {
       0
     );
 
-    // Lower the whole canvas too, keeping the fully scattered particles subtle behind page copy.
-    canvas.style.opacity = String(1.0 - contentFade * 0.55);
+    // Fade the canvas without removing the particles entirely, keeping them visible but subdued on every screen.
+    const sceneOpacity = mobile ? 0.62 : 1.0;
+    canvas.style.opacity = String(sceneOpacity * (1.0 - contentFade * 0.48));
     renderer.render(scene, camera);
   }
 
@@ -345,7 +364,10 @@ function init(canvas) {
   let resizeTimer = null;
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(layout, 120);
+    resizeTimer = setTimeout(() => {
+      layout();
+      readScroll();
+    }, 120);
   });
 
   canvas.addEventListener("webglcontextlost", (event) => {
