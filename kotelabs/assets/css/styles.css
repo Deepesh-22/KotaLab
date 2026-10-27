@@ -236,7 +236,9 @@ h1, h2, h3, h4, p, figure, blockquote { margin: 0; }
 /* Per-word illumination for the manifesto */
 .w {
   display: inline-block;
-  opacity: 0.16;
+  /* 0.38 (not lower) keeps un-lit words at ~3.2:1 on --ink, i.e. AA for the
+     large display type, while still reading clearly as "not yet lit". */
+  opacity: 0.38;
   transition: opacity 0.5s ease;
   will-change: opacity;
 }
@@ -1069,6 +1071,7 @@ h1, h2, h3, h4, p, figure, blockquote { margin: 0; }
 .project-browser__address span { overflow: hidden; text-overflow: ellipsis; }
 .project-browser__tools { width: 1.8rem; color: #777980; font-size: 0.8rem; letter-spacing: 0.08em; text-align: right; }
 .project-browser__viewport { display: block; overflow: hidden; background: #fff; }
+.project-browser__viewport picture { display: block; }
 .project-browser__viewport img { display: block; width: 100%; height: auto; }
 
 .project-card__visit {
@@ -1873,6 +1876,9 @@ h1, h2, h3, h4, p, figure, blockquote { margin: 0; }
 }
 #founders {
   background: radial-gradient(56% 50% at 8% 24%, rgba(255, 168, 84, 0.09), transparent 64%);
+}
+#faq {
+  background: radial-gradient(58% 50% at 16% 78%, rgba(201, 242, 77, 0.08), transparent 64%);
 }
 #contact {
   background: radial-gradient(62% 54% at 84% 12%, rgba(126, 240, 196, 0.1), transparent 64%);
