@@ -2,38 +2,38 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>https://kotalabs.vercel.app/</loc>
+    <loc>https://www.kotalabs.in/</loc>
     <lastmod>2026-10-27</lastmod>
     <image:image>
-      <image:loc>https://kotalabs.vercel.app/assets/img/og.jpg</image:loc>
+      <image:loc>https://www.kotalabs.in/assets/img/og.jpg</image:loc>
       <image:title>KotaLabs — Website Developer &amp; Web Design Studio in Kota</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://kotalabs.vercel.app/assets/img/eduroute-preview.jpg</image:loc>
+      <image:loc>https://www.kotalabs.in/assets/img/eduroute-preview.jpg</image:loc>
       <image:title>EDUROUTE career roadmap and student opportunities platform built by KotaLabs</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://kotalabs.vercel.app/assets/img/goswami-optics-preview.jpg</image:loc>
+      <image:loc>https://www.kotalabs.in/assets/img/goswami-optics-preview.jpg</image:loc>
       <image:title>Goswami Optics Kota 3D eyewear storefront and virtual try-on website built by KotaLabs</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://kotalabs.vercel.app/assets/img/vansh.jpg</image:loc>
+      <image:loc>https://www.kotalabs.in/assets/img/vansh.jpg</image:loc>
       <image:title>Vansh Khandelwal, Co-Founder of KotaLabs</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://kotalabs.vercel.app/assets/img/deepesh.jpg</image:loc>
+      <image:loc>https://www.kotalabs.in/assets/img/deepesh.jpg</image:loc>
       <image:title>Deepesh Chauhan, Co-Founder of KotaLabs</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://kotalabs.vercel.app/work.html</loc>
+    <loc>https://www.kotalabs.in/work.html</loc>
     <lastmod>2026-10-27</lastmod>
     <image:image>
-      <image:loc>https://kotalabs.vercel.app/assets/img/eduroute-preview.jpg</image:loc>
+      <image:loc>https://www.kotalabs.in/assets/img/eduroute-preview.jpg</image:loc>
       <image:title>EDUROUTE career roadmap and student opportunities platform built by KotaLabs</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://kotalabs.vercel.app/assets/img/goswami-optics-preview.jpg</image:loc>
+      <image:loc>https://www.kotalabs.in/assets/img/goswami-optics-preview.jpg</image:loc>
       <image:title>Goswami Optics Kota 3D eyewear storefront and virtual try-on website built by KotaLabs</image:title>
     </image:image>
   </url>
