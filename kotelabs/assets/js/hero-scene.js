@@ -262,15 +262,32 @@ function init(canvas) {
   const smooth = { x: 0, y: 0 };
   let targetProgress = 0;
   let pageProgress = 0;
+  let targetSpreadProgress = 0;
+  let spreadProgress = 0;
+  const manifestoSection = document.getElementById("manifesto");
+  const servicesSection = document.getElementById("services");
 
   window.addEventListener("pointermove", (event) => {
     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
     pointer.y = (event.clientY / window.innerHeight) * 2 - 1;
   }, { passive: true });
 
+  const sectionTop = (section) => section
+    ? section.getBoundingClientRect().top + window.scrollY
+    : 0;
+
   const readScroll = () => {
     const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
     targetProgress = Math.min(1, Math.max(0, window.scrollY / max));
+
+    // Start opening the hero galaxy as the manifesto scrolls in; finish as Services arrives.
+    const spreadStart = sectionTop(manifestoSection);
+    const spreadEnd = sectionTop(servicesSection) + window.innerHeight * 0.35;
+    targetSpreadProgress = clamp(
+      (window.scrollY - spreadStart) / Math.max(1, spreadEnd - spreadStart),
+      0,
+      1
+    );
   };
   window.addEventListener("scroll", readScroll, { passive: true });
   readScroll();
@@ -289,14 +306,14 @@ function init(canvas) {
 
   function draw(time) {
     pageProgress += (targetProgress - pageProgress) * 0.055;
+    spreadProgress += (targetSpreadProgress - spreadProgress) * 0.055;
     smooth.x += (pointer.x - smooth.x) * 0.045;
     smooth.y += (pointer.y - smooth.y) * 0.045;
 
     const p = pageProgress;
-    const open = smoothstep(0.015, 0.72, p);
-    // Dim the scene within the first viewport of scrolling, before the galaxy spreads behind section copy.
-    const scrollScreens = window.scrollY / Math.max(1, window.innerHeight);
-    const contentFade = smoothstep(0.02, 1.0, scrollScreens);
+    const open = smoothstep(0.0, 1.0, spreadProgress);
+    // Dim early in the spread, then keep particles subtly visible through the Services copy.
+    const contentFade = smoothstep(0.0, 0.28, spreadProgress);
     const mobile = group.userData.mobile;
     const shift = group.userData.shift || 0;
 
@@ -347,7 +364,10 @@ function init(canvas) {
   let resizeTimer = null;
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(layout, 120);
+    resizeTimer = setTimeout(() => {
+      layout();
+      readScroll();
+    }, 120);
   });
 
   canvas.addEventListener("webglcontextlost", (event) => {
