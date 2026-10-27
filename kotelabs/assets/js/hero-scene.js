@@ -185,8 +185,8 @@ function init(canvas) {
 
       vColor = aColor;
       vSeed = aSeed;
-      // Keep the galaxy vivid in the hero, then dim the scattered field so page copy stays clear.
-      vFade = mix(1.0, 0.12, uContentFade);
+      // Preserve the bright galaxy in the hero, then keep the scattered field low-contrast behind copy.
+      vFade = mix(1.0, 0.045, uContentFade);
     }
   `;
 
@@ -294,8 +294,9 @@ function init(canvas) {
 
     const p = pageProgress;
     const open = smoothstep(0.015, 0.72, p);
-    // Fade in step with the galaxy opening, so the fully scattered field sits quietly behind text.
-    const contentFade = smoothstep(0.08, 0.58, open);
+    // Dim the scene within the first viewport of scrolling, before the galaxy spreads behind section copy.
+    const scrollScreens = window.scrollY / Math.max(1, window.innerHeight);
+    const contentFade = smoothstep(0.02, 1.0, scrollScreens);
     const mobile = group.userData.mobile;
     const shift = group.userData.shift || 0;
 
@@ -319,8 +320,9 @@ function init(canvas) {
       0
     );
 
-    // Lower the whole canvas too, keeping the fully scattered particles subtle behind page copy.
-    canvas.style.opacity = String(1.0 - contentFade * 0.55);
+    // Lower the canvas too; retain the mobile baseline while fading the scattered field on every screen.
+    const sceneOpacity = mobile ? 0.62 : 1.0;
+    canvas.style.opacity = String(sceneOpacity * (1.0 - contentFade * 0.78));
     renderer.render(scene, camera);
   }
 
